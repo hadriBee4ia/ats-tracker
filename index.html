@@ -9,12 +9,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ATS">
 <title>Journal ATS</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E1116'/%3E%3Ctext x='32' y='44' font-family='Arial' font-size='30' font-weight='700' fill='%23FFB627' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2308080F'/%3E%3Ctext x='32' y='44' font-family='Arial' font-size='30' font-weight='700' fill='%238B5CF6' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 :root{
-  --ink:#0E1116; --panel:#161B22; --panel2:#1E242E; --border:#2A313C;
-  --chalk:#ECEFF3; --muted:#8B95A3; --amber:#FFB627; --green:#47D18A;
+  --ink:#08080F; --panel:#12121E; --panel2:#1A1A2B; --border:#2A2A42;
+  --chalk:#ECECF6; --muted:#8686A6; --amber:#8B5CF6; --violet2:#A78BFA; --blue:#38BDF8; --green:#34D399;
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
 html,body{margin:0; background:var(--ink);}
@@ -32,8 +32,8 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
   color:var(--amber); border:1px solid var(--amber); border-radius:4px; padding:1px 6px;}
 .modeseg{display:flex; gap:6px; padding:0 20px 14px;}
 .modeseg button{flex:1; background:var(--panel); border:1px solid var(--border); color:var(--muted);
-  border-radius:10px; padding:10px 4px; font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s;}
-.modeseg button.on{color:var(--ink); background:var(--amber); border-color:var(--amber);}
+  border-radius:10px; padding:9px 2px; font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:600; cursor:pointer; transition:all .15s;}
+.modeseg button.on{color:#fff; background:var(--amber); border-color:var(--amber);}
 .tabs{display:flex; gap:8px; padding:0 20px 16px;}
 .tab{flex:1; background:var(--panel); border:1px solid var(--border); border-radius:12px;
   padding:12px 10px; cursor:pointer; text-align:left; transition:border-color .15s, transform .08s;}
@@ -67,7 +67,7 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
   transition:all .15s; color:#4d5561;}
 .check:active{transform:scale(.92);}
 .check.on{background:var(--green); border-color:var(--green); color:#0E1116;}
-.setrow.done .inp{border-color:rgba(71,209,138,.35);}
+.setrow.done .inp{border-color:rgba(52,211,153,.35);}
 .stretch-actions{display:flex; gap:8px; align-items:center; margin-top:12px;}
 .play{flex:1; border:1px solid var(--border); background:var(--panel2); color:var(--chalk); border-radius:9px;
   padding:11px; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:transform .08s;}
@@ -76,7 +76,7 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .savebar-in{max-width:560px; margin:0 auto; padding:14px 20px calc(14px + env(safe-area-inset-bottom));
   background:linear-gradient(180deg,transparent,var(--ink) 34%);}
 .save{width:100%; border:none; border-radius:13px; padding:16px; font-family:'Space Grotesk',sans-serif;
-  font-size:15px; font-weight:700; letter-spacing:.3px; color:#0E1116; background:var(--amber); cursor:pointer; transition:transform .08s, opacity .15s;}
+  font-size:15px; font-weight:700; letter-spacing:.3px; color:#fff; background:var(--amber); cursor:pointer; transition:transform .08s, opacity .15s;}
 .save:active{transform:scale(.99);}
 .save.empty{opacity:.4;}
 .timerbar{position:fixed; left:0; right:0; bottom:80px; z-index:35; display:flex; justify-content:center; padding:0 20px; pointer-events:none;}
@@ -107,14 +107,14 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .empty-h{text-align:center; color:var(--muted); font-size:13px; padding:40px 20px; line-height:1.6;}
 .danger{background:none; border:1px solid var(--border); color:var(--muted); border-radius:8px;
   font-family:'Space Grotesk',sans-serif; font-size:11px; padding:8px 12px; cursor:pointer; margin-top:8px;}
-.today{margin:0 20px 18px; border:1px solid var(--amber); border-radius:16px; padding:18px; background:rgba(255,182,39,.06);}
+.today{margin:0 20px 18px; border:1px solid var(--amber); border-radius:16px; padding:18px; background:rgba(139,92,246,.06);}
 .today.rest{border-color:var(--border); background:var(--panel);}
 .today .eyebrow{font-size:11px; font-weight:700; letter-spacing:1.5px; color:var(--amber); text-transform:uppercase;}
 .today.rest .eyebrow{color:var(--muted);}
 .today .tact{font-size:26px; font-weight:700; letter-spacing:-.5px; margin-top:9px; display:flex; align-items:center; gap:11px;}
 .today .tact .dot{width:11px; height:11px; border-radius:50%; flex:none;}
 .today .tsub{font-size:13px; color:var(--muted); margin-top:8px; line-height:1.5;}
-.today .cta{width:100%; margin-top:16px; border:none; border-radius:12px; padding:15px; font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; color:var(--ink); background:var(--amber); cursor:pointer;}
+.today .cta{width:100%; margin-top:16px; border:none; border-radius:12px; padding:15px; font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; color:#fff; background:var(--amber); cursor:pointer;}
 .today .cta:active{transform:scale(.99);}
 .today .altlink{display:block; width:100%; text-align:center; margin-top:11px; background:none; border:none; color:var(--muted); font-family:'Space Grotesk',sans-serif; font-size:12px; text-decoration:underline; text-underline-offset:3px; cursor:pointer;}
 .weeklist{padding:0 20px;}
@@ -129,8 +129,17 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .wrow .wmid{flex:1; min-width:0;}
 .wrow .wact{font-size:15px; font-weight:600;}
 .wrow .wsub{font-size:11px; color:var(--muted); margin-top:1px;}
-.wrow .nowchip{font-size:9px; font-weight:700; letter-spacing:.5px; color:var(--ink); background:var(--amber); border-radius:4px; padding:2px 6px; flex:none;}
+.wrow .nowchip{font-size:9px; font-weight:700; letter-spacing:.5px; color:#fff; background:var(--amber); border-radius:4px; padding:2px 6px; flex:none;}
 .wrow .wgo{color:var(--muted); font-size:20px; flex:none; line-height:1;}
+.prog{padding:0 20px;}
+.progsel{width:100%; background:var(--panel2); border:1px solid var(--border); color:var(--chalk); border-radius:10px; padding:12px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; margin-bottom:14px; -webkit-appearance:none; appearance:none;}
+.chartcard{background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:14px;}
+.chart{width:100%; height:auto; display:block;}
+.pcap{font-size:11px; color:var(--muted); margin-top:10px; text-align:center; line-height:1.5;}
+.pstats{display:flex; gap:9px; margin-top:14px;}
+.pstat{flex:1; background:var(--panel2); border:1px solid var(--border); border-radius:10px; padding:11px 6px; text-align:center;}
+.pstat .pv{font-size:20px; font-weight:700;}
+.pstat .pl{font-size:10px; color:var(--muted); margin-top:2px;}
 </style>
 </head>
 <body>
@@ -151,7 +160,7 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
    ============================================================ */
 
 var SESSIONS = [
-  { id:"s1", n:"01", title:"Push", long:"Haut du corps · priorité poussée", tag:"#FF7A59", blocks:[
+  { id:"s1", n:"01", title:"Push", long:"Haut du corps · priorité poussée", tag:"#E879F9", blocks:[
     { label:"Force", items:[
       { id:"s1f1", name:"Dips lestées", sets:5, reps:"4–6", rest:"2–3 min", restSec:150, note:"RIR 1–2 · lest au sac", load:true },
       { id:"s1f2", name:"Pseudo-planche push-ups", sets:4, reps:"5–8", rest:"2 min", restSec:120, note:"corps incliné vers l'avant" } ]},
@@ -162,7 +171,7 @@ var SESSIONS = [
     { label:"Core", items:[
       { id:"s1c1", name:"Relevés de jambes suspendus", sets:3, reps:"8–12", rest:"60 s", restSec:60, note:"descente contrôlée" } ]}
   ]},
-  { id:"s2", n:"02", title:"Jambes", long:"Bas du corps + core · priorité jambes", tag:"#5EC8E5", blocks:[
+  { id:"s2", n:"02", title:"Jambes", long:"Bas du corps + core · priorité jambes", tag:"#38BDF8", blocks:[
     { label:"Force", items:[
       { id:"s2f1", name:"Squats bulgares lestés", sets:4, reps:"6–8 /j", rest:"2 min", restSec:120, note:"RIR 1–2", load:true },
       { id:"s2f2", name:"Nordic curls", sets:4, reps:"4–8", rest:"2 min", restSec:120, note:"assisté / négatif si besoin" } ]},
@@ -174,7 +183,7 @@ var SESSIONS = [
       { id:"s2c1", name:"Dragon flag", sets:3, reps:"4–8", rest:"90 s", restSec:90, note:"tuck / négatif" },
       { id:"s2c2", name:"Gainage hollow body", sets:3, reps:"30–45 s", rest:"45 s", restSec:45, note:"lombaires plaquées" } ]}
   ]},
-  { id:"s3", n:"03", title:"Pull", long:"Haut du corps · priorité tirage", tag:"#C084FC", blocks:[
+  { id:"s3", n:"03", title:"Pull", long:"Haut du corps · priorité tirage", tag:"#A78BFA", blocks:[
     { label:"Force", items:[
       { id:"s3f1", name:"Tractions lestées", sets:5, reps:"4–6", rest:"2–3 min", restSec:150, note:"RIR 1–2 · lest au sac", load:true },
       { id:"s3f2", name:"Front lever (progression)", sets:4, reps:"8–15 s", rest:"2 min", restSec:120, note:"tuck → straddle" } ]},
@@ -188,21 +197,21 @@ var SESSIONS = [
 ];
 
 var STRETCH = [
-  { id:"m1", n:"01", title:"Mobilité Push", long:"Après la séance Push · épaules, pecs, poignets", tag:"#FF7A59", items:[
+  { id:"m1", n:"01", title:"Mobilité Push", long:"Après la séance Push · épaules, pecs, poignets", tag:"#E879F9", items:[
     { id:"m1a", name:"Pectoraux à la porte", hold:"45 s /côté", holdSec:45, note:"avant-bras contre le montant" },
     { id:"m1b", name:"Épaule croisée (cross-body)", hold:"30 s /côté", holdSec:30 },
     { id:"m1c", name:"Triceps au-dessus de la tête", hold:"30 s /côté", holdSec:30 },
     { id:"m1d", name:"Extension poignets, paumes au sol", hold:"40 s", holdSec:40, note:"à genoux, doigts vers toi" },
     { id:"m1e", name:"Flexion poignets, dos des mains au sol", hold:"40 s", holdSec:40 },
     { id:"m1f", name:"Dislocations d'épaule au bâton", hold:"10 lentes", holdSec:40, note:"amplitude progressive" } ]},
-  { id:"m2", n:"02", title:"Mobilité Jambes", long:"Après la séance Jambes · ischios, hanches, chevilles", tag:"#5EC8E5", items:[
+  { id:"m2", n:"02", title:"Mobilité Jambes", long:"Après la séance Jambes · ischios, hanches, chevilles", tag:"#38BDF8", items:[
     { id:"m2a", name:"Ischios debout, jambe tendue", hold:"45 s /côté", holdSec:45, note:"dos droit, penche des hanches" },
     { id:"m2b", name:"Fente basse fléchisseur de hanche", hold:"45 s /côté", holdSec:45, note:"bascule le bassin" },
     { id:"m2c", name:"Quadriceps debout", hold:"40 s /côté", holdSec:40 },
     { id:"m2d", name:"Squat profond tenu", hold:"60 s", holdSec:60, note:"talons au sol, pousse les genoux" },
     { id:"m2e", name:"Adducteurs (grenouille)", hold:"60 s", holdSec:60 },
     { id:"m2f", name:"Mollets au mur", hold:"45 s /côté", holdSec:45, note:"jambe tendue puis fléchie" } ]},
-  { id:"m3", n:"03", title:"Mobilité Pull + Combat", long:"Jours de pull ou de combat · dos, thoracique, hanches", tag:"#C084FC", items:[
+  { id:"m3", n:"03", title:"Mobilité Pull + Combat", long:"Jours de pull ou de combat · dos, thoracique, hanches", tag:"#A78BFA", items:[
     { id:"m3a", name:"Suspension à la barre (dead hang)", hold:"30 s", holdSec:30, note:"relâche les dorsaux" },
     { id:"m3b", name:"Rotation thoracique à genoux", hold:"8 /côté", holdSec:40, note:"main derrière la tête, ouvre" },
     { id:"m3c", name:"Pigeon (hanche / fessier)", hold:"60 s /côté", holdSec:60 },
@@ -222,8 +231,8 @@ var WEEK = [
   { day:"Dimanche", idx:0, kind:"combat", label:"Krav maga", mob:"m3" }
 ];
 
-var ALL_ITEMS = {};
-SESSIONS.forEach(function(s){ s.blocks.forEach(function(b){ b.items.forEach(function(it){ ALL_ITEMS[it.id]=it; }); }); });
+var ALL_ITEMS = {}, EX_TAG = {};
+SESSIONS.forEach(function(s){ s.blocks.forEach(function(b){ b.items.forEach(function(it){ ALL_ITEMS[it.id]=it; EX_TAG[it.id]=s.tag; }); }); });
 
 var LOG_KEY = "ats:log";
 var memFallback = {};
@@ -233,7 +242,7 @@ function rawSet(k,v){ try { localStorage.setItem(k,v); } catch(e){ memFallback[k
 var log = (function(){ try { var v=rawGet(LOG_KEY); return v? JSON.parse(v):[]; } catch(e){ return []; } })();
 function saveLog(){ rawSet(LOG_KEY, JSON.stringify(log)); }
 
-var state = { mode:"semaine", active:"s1", routine:"m1" };
+var state = { mode:"semaine", active:"s1", routine:"m1", progEx:null };
 var timer = null, timerIv = null, audioCtx = null;
 
 /* ---------- audio + vibration ---------- */
@@ -263,7 +272,7 @@ function renderHeader(){
 }
 function renderNav(){
   var m=state.mode;
-  var defs=[["semaine","Semaine"],["force","Force"],["mobilite","Mobilité"],["hist","Histo."]];
+  var defs=[["semaine","Semaine"],["force","Force"],["mobilite","Mobilité"],["prog","Progrès"],["hist","Histo."]];
   document.getElementById("nav").innerHTML = defs.map(function(d){
     return '<button data-mode="'+d[0]+'" class="'+(m===d[0]?"on":"")+'">'+d[1]+'</button>';
   }).join("");
@@ -278,11 +287,13 @@ function renderMain(){
   if(m==="semaine") html=viewSemaine();
   else if(m==="force") html=viewForce();
   else if(m==="mobilite") html=viewMobilite();
+  else if(m==="prog") html=viewProgress();
   else if(m==="hist") html=viewHist();
   document.getElementById("main").innerHTML=html;
   if(m==="semaine") wireSemaine();
   else if(m==="force") wireForce();
   else if(m==="mobilite") wireMobilite();
+  else if(m==="prog") wireProgress();
   else if(m==="hist") wireHist();
 }
 
@@ -299,7 +310,7 @@ function viewSemaine(){
        '<button class="altlink" data-mob="'+tp.mob+'">Étirements à faire après →</button></div>';
   } else if(tp.kind==="combat"){
     h+='<div class="today"><div class="eyebrow">Aujourd\'hui · '+tp.day+'</div>'+
-       '<div class="tact"><span class="dot" style="background:#FFB627"></span>Krav maga <span style="font-size:14px;color:var(--muted);font-weight:500;">· soir</span></div>'+
+       '<div class="tact"><span class="dot" style="background:#8B5CF6"></span>Krav maga <span style="font-size:14px;color:var(--muted);font-weight:500;">· soir</span></div>'+
        '<div class="tsub">Journée combat. Garde les jambes fraîches.</div>'+
        '<button class="altlink" data-mob="m3">Mobilité Pull + Combat (échauffement) →</button></div>';
   } else {
@@ -313,7 +324,7 @@ function viewSemaine(){
     var now=(w.idx===dow), clickable=(w.kind==="force");
     h+='<div class="wrow'+(now?" now":"")+(clickable?" clickable":"")+'"'+(clickable?' data-go="'+w.ref+'"':'')+'>'+
        '<div class="wday">'+w.day+'</div>'+
-       (w.kind!=="repos"?'<span class="wdot" style="background:'+(s?s.tag:"#FFB627")+'"></span>':'')+
+       (w.kind!=="repos"?'<span class="wdot" style="background:'+(s?s.tag:"#8B5CF6")+'"></span>':'')+
        '<div class="wmid"><div class="wact">'+(w.kind==="repos"?"Repos":w.label)+'</div>'+
        '<div class="wsub">'+(w.kind==="force"?"Force + étirements":w.kind==="combat"?"Soir":"Récupération")+'</div></div>'+
        (now?'<span class="nowchip">AUJ.</span>':'')+
@@ -461,6 +472,78 @@ function finishStretch(){
   var r=STRETCH.filter(function(x){return x.id===state.routine;})[0];
   log.push({type:"stretch", date:new Date().toISOString(), routineId:state.routine, done:c, total:r.items.length});
   saveLog(); renderMain(); flash("Mobilité enregistrée");
+}
+
+/* ---- Progrès (courbes) ---- */
+function progExercises(){
+  var out=[];
+  Object.keys(ALL_ITEMS).forEach(function(id){
+    var series=[];
+    log.forEach(function(e){
+      if(e.type==="stretch") return;
+      if(e.entries && e.entries[id]){
+        var reps=e.entries[id].map(function(s){return parseInt(s.reps,10);}).filter(function(n){return !isNaN(n);});
+        if(reps.length){
+          var total=reps.reduce(function(a,b){return a+b;},0);
+          series.push({date:e.date, total:total});
+        }
+      }
+    });
+    if(series.length) out.push({id:id, name:ALL_ITEMS[id].name, tag:EX_TAG[id]||"#8B5CF6", series:series});
+  });
+  return out;
+}
+function buildChart(cur){
+  var s=cur.series, tag=cur.tag, n=s.length;
+  var W=320,H=170,padL=30,padR=12,padT=14,padB=26;
+  var maxV=Math.max.apply(null, s.map(function(d){return d.total;})); if(maxV<=0) maxV=1;
+  var yMax=Math.max(1, Math.ceil(maxV*1.15));
+  function X(i){ return n<=1 ? (padL+(W-padL-padR)/2) : padL + i*(W-padL-padR)/(n-1); }
+  function Y(v){ return padT + (H-padT-padB)*(1 - v/yMax); }
+  var grid="";
+  [0,0.5,1].forEach(function(f){ var yv=Math.round(yMax*f), y=Y(yv);
+    grid+='<line x1="'+padL+'" y1="'+y+'" x2="'+(W-padR)+'" y2="'+y+'" stroke="var(--border)" stroke-width="1"/>';
+    grid+='<text x="'+(padL-6)+'" y="'+(y+3)+'" fill="var(--muted)" font-size="9" text-anchor="end" font-family="monospace">'+yv+'</text>';
+  });
+  var pts=s.map(function(d,i){return X(i)+","+Y(d.total);});
+  var area="", poly="";
+  if(n>1){
+    area='<polygon points="'+X(0)+','+Y(0)+' '+pts.join(" ")+' '+X(n-1)+','+Y(0)+'" fill="url(#garea)"/>';
+    poly='<polyline points="'+pts.join(" ")+'" fill="none" stroke="url(#gline)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+  var dots="";
+  s.forEach(function(d,i){ dots+='<circle cx="'+X(i)+'" cy="'+Y(d.total)+'" r="'+(i===n-1?4:3)+'" fill="'+(i===n-1?tag:"var(--panel)")+'" stroke="'+tag+'" stroke-width="2"/>'; });
+  var xlab='<text x="'+X(0)+'" y="'+(H-8)+'" fill="var(--muted)" font-size="9" text-anchor="middle" font-family="monospace">'+fmtDate(s[0].date)+'</text>';
+  if(n>1) xlab+='<text x="'+X(n-1)+'" y="'+(H-8)+'" fill="var(--muted)" font-size="9" text-anchor="middle" font-family="monospace">'+fmtDate(s[n-1].date)+'</text>';
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" class="chart" preserveAspectRatio="xMidYMid meet">'+
+    '<defs>'+
+    '<linearGradient id="gline" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--amber)"/><stop offset="1" stop-color="var(--blue)"/></linearGradient>'+
+    '<linearGradient id="garea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+tag+'" stop-opacity="0.22"/><stop offset="1" stop-color="'+tag+'" stop-opacity="0"/></linearGradient>'+
+    '</defs>'+grid+area+poly+dots+xlab+'</svg>';
+  var last=s[n-1].total, first=s[0].total, delta=last-first, ds=(delta>0?"+":"")+delta;
+  var stats='<div class="pstats">'+
+    '<div class="pstat"><div class="pv mono">'+last+'</div><div class="pl">reps (dernière)</div></div>'+
+    '<div class="pstat"><div class="pv mono" style="color:'+(delta>=0?"var(--green)":"#F87171")+'">'+ds+'</div><div class="pl">évolution</div></div>'+
+    '<div class="pstat"><div class="pv mono">'+n+'</div><div class="pl">séances</div></div></div>';
+  var cap='<div class="pcap">Reps totales par séance'+(n<2?' · une seule séance pour l\'instant — reviens après la prochaine pour voir la courbe':'')+'</div>';
+  return '<div class="chartcard">'+svg+cap+stats+'</div>';
+}
+function viewProgress(){
+  var exs=progExercises();
+  if(exs.length===0){
+    return '<div class="prog"><div class="empty-h">Pas encore de données.<br>Enregistre des séances de force pour voir tes courbes de progression.</div></div>';
+  }
+  var sel=state.progEx;
+  if(!sel || !exs.some(function(x){return x.id===sel;})) sel=exs[0].id;
+  var cur=exs.filter(function(x){return x.id===sel;})[0];
+  var h='<div class="prog"><select class="progsel" id="progsel">';
+  exs.forEach(function(x){ h+='<option value="'+x.id+'"'+(x.id===sel?" selected":"")+'>'+esc(x.name)+'</option>'; });
+  h+='</select>'+buildChart(cur)+'</div>';
+  return h;
+}
+function wireProgress(){
+  var sel=document.getElementById("progsel");
+  if(sel) sel.onchange=function(){ state.progEx=sel.value; renderMain(); };
 }
 
 /* ---- Historique ---- */
