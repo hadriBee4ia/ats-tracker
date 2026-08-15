@@ -148,6 +148,26 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .howcues{margin-top:11px; display:flex; flex-direction:column; gap:7px;}
 .cue{font-size:12px; color:var(--muted); line-height:1.45; padding-left:16px; position:relative;}
 .cue:before{content:"▸"; position:absolute; left:0; top:1px; color:var(--amber); font-size:10px;}
+.coach{margin-top:10px; font-size:12px; font-weight:600; color:var(--green); background:rgba(52,211,153,.1); border:1px solid rgba(52,211,153,.35); border-radius:8px; padding:8px 10px;}
+.demolink{display:inline-block; margin-top:11px; color:var(--blue); font-size:12px; font-weight:600; text-decoration:none; border:1px solid var(--border); border-radius:8px; padding:8px 11px;}
+.demolink:active{opacity:.6;}
+.wcard{background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:18px;}
+.wtitle{font-size:13px; font-weight:700; letter-spacing:.3px; margin-bottom:11px;}
+.wrow2{display:flex; gap:8px; margin-bottom:6px;}
+.winp{flex:1; background:var(--panel2); border:1px solid var(--border); border-radius:9px; color:var(--chalk); font-family:'JetBrains Mono',monospace; font-size:15px; padding:10px; outline:none;}
+.winp:focus{border-color:var(--amber);}
+.wsave{border:none; border-radius:9px; background:var(--amber); color:#fff; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; padding:0 16px; cursor:pointer;}
+.wsave:active{transform:scale(.98);}
+.plabel{font-size:11px; font-weight:700; letter-spacing:1.5px; color:var(--muted); text-transform:uppercase; margin:2px 0 10px;}
+.wload{display:flex; gap:8px; margin:0 20px 16px;}
+.wloaditem{flex:1; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px 6px; text-align:center;}
+.wloaditem .wv{font-size:19px; font-weight:700;}
+.wloaditem .wl{font-size:10px; color:var(--muted); margin-top:1px;}
+.combatbtn{width:100%; margin-top:14px; border:none; border-radius:12px; padding:14px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:#fff; background:var(--amber); cursor:pointer;}
+.combatbtn:active{transform:scale(.99);}
+.combatbtn.done{background:var(--panel2); color:var(--green); border:1px solid rgba(52,211,153,.4);}
+.saverem{font-size:11px; color:var(--muted); margin-bottom:12px; text-align:center;}
+.saverem.warn{color:var(--amber);}
 </style>
 </head>
 <body>
@@ -313,9 +333,26 @@ function lastEntry(sessionId, exId){
 var CHECK_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 
 /* ---------- render : header + nav ---------- */
+function topOfRange(reps){ var m=String(reps).match(/(\d+)\D+(\d+)/); if(m) return parseInt(m[2],10); var m2=String(reps).match(/(\d+)/); return m2?parseInt(m2[1],10):null; }
+function readyToProgress(item){
+  var top=topOfRange(item.reps); if(top==null) return null;
+  var prev=lastEntry(state.active, item.id); if(!prev) return null;
+  var reps=prev.map(function(s){return parseInt(s.reps,10);}).filter(function(n){return !isNaN(n);});
+  if(reps.length < item.sets) return null;
+  var minReps=Math.min.apply(null, reps);
+  if(minReps>=top) return item.load ? "+2,5 kg au sac" : "passe à la variation supérieure";
+  return null;
+}
+function weekStart(){ var d=new Date(); var day=(d.getDay()+6)%7; d.setHours(0,0,0,0); d.setDate(d.getDate()-day); return d; }
+function weeklyLoad(){ var ws=weekStart(), f=0,c=0,m=0; log.forEach(function(e){ if(new Date(e.date)>=ws){ if(e.type==="combat")c++; else if(e.type==="stretch")m++; else if(e.type==="strength"||(!e.type&&e.entries))f++; } }); return {f:f,c:c,m:m}; }
+function weightSeries(){ var out=[]; log.forEach(function(e){ if(e.type==="weight"){ var v=parseFloat(String(e.kg).replace(",",".")); if(!isNaN(v)) out.push({date:e.date, v:v}); } }); return out; }
+function combatDoneToday(){ var t=new Date(); t.setHours(0,0,0,0); return log.some(function(e){ return e.type==="combat" && new Date(e.date)>=t; }); }
+function setLastExport(){ rawSet("ats:lastexport", new Date().toISOString()); }
+function lastExportDays(){ var v=rawGet("ats:lastexport"); if(!v) return null; return Math.floor((new Date()-new Date(v))/(24*3600*1000)); }
+
 function renderHeader(){
   var wk=weekNumber(), deload=(((wk-1)%6)+1===6);
-  var count=log.filter(function(e){return e.type!=="stretch";}).length;
+  var count=log.filter(function(e){return e.type==="strength"||(!e.type&&e.entries);}).length;
   document.getElementById("hdr").innerHTML =
     '<div class="mark"><b>ATS</b><span>Journal de force</span></div>'+
     '<div class="meta"><div class="wk mono">Semaine ~'+wk+'</div><div class="mono">'+count+' séances</div>'+
@@ -360,15 +397,22 @@ function viewSemaine(){
        '<button class="cta" data-go="'+tp.ref+'">Commencer la séance</button>'+
        '<button class="altlink" data-mob="'+tp.mob+'">Étirements à faire après →</button></div>';
   } else if(tp.kind==="combat"){
+    var cdone=combatDoneToday();
     h+='<div class="today"><div class="eyebrow">Aujourd\'hui · '+tp.day+'</div>'+
        '<div class="tact"><span class="dot" style="background:#8B5CF6"></span>Krav maga <span style="font-size:14px;color:var(--muted);font-weight:500;">· soir</span></div>'+
        '<div class="tsub">Journée combat. Garde les jambes fraîches.</div>'+
+       '<button class="combatbtn'+(cdone?" done":"")+'" data-combat="1"'+(cdone?" disabled":"")+'>'+(cdone?"Fait aujourd\'hui ✓":"Marquer le krav comme fait")+'</button>'+
        '<button class="altlink" data-mob="m3">Mobilité Pull + Combat (échauffement) →</button></div>';
   } else {
     h+='<div class="today rest"><div class="eyebrow">Aujourd\'hui · '+tp.day+'</div>'+
        '<div class="tact">Repos complet</div>'+
        '<div class="tsub">Récupère — c\'est là que les progrès se consolident.</div></div>';
   }
+  var wl=weeklyLoad();
+  h+='<div class="wload">'+
+     '<div class="wloaditem"><div class="wv mono">'+wl.f+'</div><div class="wl">force</div></div>'+
+     '<div class="wloaditem"><div class="wv mono">'+wl.c+'</div><div class="wl">combat</div></div>'+
+     '<div class="wloaditem"><div class="wv mono">'+wl.m+'</div><div class="wl">mobilité</div></div></div>';
   h+='<div class="weeklist"><div class="wlabel">La semaine</div>';
   WEEK.forEach(function(w){
     var s=(w.kind==="force")?SESSIONS.filter(function(x){return x.id===w.ref;})[0]:null;
@@ -390,6 +434,9 @@ function wireSemaine(){
   });
   Array.prototype.forEach.call(document.querySelectorAll("[data-mob]"), function(el){
     el.onclick=function(){ state.routine=el.getAttribute("data-mob"); state.mode="mobilite"; renderMain(); renderNav(); window.scrollTo(0,0); };
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-combat]"), function(el){
+    el.onclick=function(){ if(combatDoneToday()) return; log.push({type:"combat", date:new Date().toISOString(), label:"Krav maga"}); saveLog(); renderMain(); renderHeader(); flash("Krav maga enregistré"); };
   });
 }
 
@@ -413,8 +460,11 @@ function viewForce(){
       var ht=HOWTO[it.id];
       if(ht){ h+='<button class="howbtn" data-how="'+it.id+'">Comment faire ›</button>'+
         '<div class="howpanel" id="how-'+it.id+'"><div class="howmove">'+esc(ht.how)+'</div>'+
-        '<div class="howcues">'+ht.cues.map(function(c){return '<div class="cue">'+esc(c)+'</div>';}).join("")+'</div></div>'; }
+        '<div class="howcues">'+ht.cues.map(function(c){return '<div class="cue">'+esc(c)+'</div>';}).join("")+'</div>'+
+        '<a class="demolink" href="https://www.youtube.com/results?search_query='+encodeURIComponent(it.name+' calisthenics form')+'" target="_blank" rel="noopener">▶ Voir une démo vidéo</a></div>'; }
       if(prev){ h+='<div class="last">dernière fois : <span class="mono">'+prev.map(function(s){return (s.reps||"·")+(s.load?"+"+s.load+"kg":"");}).join("  ·  ")+'</span></div>'; }
+      var rp=readyToProgress(it);
+      if(rp){ h+='<div class="coach">⤴ Prêt à monter d\'un cran · '+rp+'</div>'; }
       h+='<div class="sets">';
       for(var i=0;i<it.sets;i++){
         h+='<div class="setrow" data-ex="'+it.id+'">'+
@@ -503,7 +553,8 @@ function viewMobilite(){
     var ht=STRETCH_HOW[it.id];
     if(ht){ h+='<button class="howbtn" data-how="'+it.id+'">Comment faire ›</button>'+
       '<div class="howpanel" id="how-'+it.id+'"><div class="howmove">'+esc(ht.how)+'</div>'+
-      '<div class="howcues">'+ht.cues.map(function(c){return '<div class="cue">'+esc(c)+'</div>';}).join("")+'</div></div>'; }
+      '<div class="howcues">'+ht.cues.map(function(c){return '<div class="cue">'+esc(c)+'</div>';}).join("")+'</div>'+
+      '<a class="demolink" href="https://www.youtube.com/results?search_query='+encodeURIComponent(it.name+' stretch')+'" target="_blank" rel="noopener">▶ Voir une démo vidéo</a></div>'; }
     h+='<div class="stretch-actions">'+
        '<button class="play" data-hold="'+it.holdSec+'" data-name="'+esc(it.name)+'">▶ Démarrer '+it.holdSec+'s</button>'+
        '<button class="check" data-str="'+it.id+'" aria-label="Étirement fait">'+CHECK_SVG+'</button></div></div>';
@@ -601,15 +652,43 @@ function buildChart(cur){
   var cap='<div class="pcap">Reps totales par séance'+(n<2?' · une seule séance pour l\'instant — reviens après la prochaine pour voir la courbe':'')+'</div>';
   return '<div class="chartcard">'+svg+cap+stats+'</div>';
 }
+function buildWeightChart(s){
+  var n=s.length, W=320,H=150,padL=34,padR=12,padT=12,padB=24;
+  var vals=s.map(function(d){return d.v;});
+  var mn=Math.min.apply(null,vals), mx=Math.max.apply(null,vals);
+  var yMin=Math.floor(mn-1), yMax=Math.ceil(mx+1); if(yMax<=yMin) yMax=yMin+1;
+  function X(i){ return n<=1?(padL+(W-padL-padR)/2):padL+i*(W-padL-padR)/(n-1); }
+  function Y(v){ return padT+(H-padT-padB)*(1-(v-yMin)/(yMax-yMin)); }
+  var grid="";
+  [0,0.5,1].forEach(function(f){ var yv=Math.round(yMin+(yMax-yMin)*f), y=Y(yv);
+    grid+='<line x1="'+padL+'" y1="'+y+'" x2="'+(W-padR)+'" y2="'+y+'" stroke="var(--border)" stroke-width="1"/>';
+    grid+='<text x="'+(padL-6)+'" y="'+(y+3)+'" fill="var(--muted)" font-size="9" text-anchor="end" font-family="monospace">'+yv+'</text>';
+  });
+  var pts=s.map(function(d,i){return X(i)+","+Y(d.v);});
+  var poly=n>1?'<polyline points="'+pts.join(" ")+'" fill="none" stroke="url(#wline)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>':"";
+  var dots=""; s.forEach(function(d,i){ dots+='<circle cx="'+X(i)+'" cy="'+Y(d.v)+'" r="'+(i===n-1?4:3)+'" fill="'+(i===n-1?"var(--blue)":"var(--panel)")+'" stroke="var(--blue)" stroke-width="2"/>'; });
+  var xlab='<text x="'+X(0)+'" y="'+(H-7)+'" fill="var(--muted)" font-size="9" text-anchor="middle" font-family="monospace">'+fmtDate(s[0].date)+'</text>';
+  if(n>1) xlab+='<text x="'+X(n-1)+'" y="'+(H-7)+'" fill="var(--muted)" font-size="9" text-anchor="middle" font-family="monospace">'+fmtDate(s[n-1].date)+'</text>';
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" class="chart" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="wline" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--violet2)"/><stop offset="1" stop-color="var(--blue)"/></linearGradient></defs>'+grid+poly+dots+xlab+'</svg>';
+  var last=s[n-1].v, first=s[0].v, delta=Math.round((last-first)*10)/10, ds=(delta>0?"+":"")+delta;
+  return svg+'<div class="pstats"><div class="pstat"><div class="pv mono">'+last+'</div><div class="pl">kg (dernier)</div></div>'+
+    '<div class="pstat"><div class="pv mono">'+ds+'</div><div class="pl">évolution</div></div>'+
+    '<div class="pstat"><div class="pv mono">'+n+'</div><div class="pl">mesures</div></div></div>';
+}
 function viewProgress(){
-  var exs=progExercises();
+  var ws=weightSeries(), exs=progExercises();
+  var h='<div class="prog">';
+  h+='<div class="wcard"><div class="wtitle">Poids du corps</div>'+
+     '<div class="wrow2"><input class="winp" id="wkg" inputmode="decimal" placeholder="ex. 74.5"><button class="wsave" id="wsave">Enregistrer</button></div>';
+  h+= ws.length ? buildWeightChart(ws) : '<div class="pcap">Note ton poids pour lancer la courbe.</div>';
+  h+='</div>';
   if(exs.length===0){
-    return '<div class="prog"><div class="empty-h">Pas encore de données.<br>Enregistre des séances de force pour voir tes courbes de progression.</div></div>';
+    h+='<div class="empty-h">Pas encore de séances de force.<br>Enregistre-en pour voir tes courbes par exercice.</div></div>';
+    return h;
   }
-  var sel=state.progEx;
-  if(!sel || !exs.some(function(x){return x.id===sel;})) sel=exs[0].id;
+  var sel=state.progEx; if(!sel||!exs.some(function(x){return x.id===sel;})) sel=exs[0].id;
   var cur=exs.filter(function(x){return x.id===sel;})[0];
-  var h='<div class="prog"><select class="progsel" id="progsel">';
+  h+='<div class="plabel">Progression par exercice</div><select class="progsel" id="progsel">';
   exs.forEach(function(x){ h+='<option value="'+x.id+'"'+(x.id===sel?" selected":"")+'>'+esc(x.name)+'</option>'; });
   h+='</select>'+buildChart(cur)+'</div>';
   return h;
@@ -617,6 +696,13 @@ function viewProgress(){
 function wireProgress(){
   var sel=document.getElementById("progsel");
   if(sel) sel.onchange=function(){ state.progEx=sel.value; renderMain(); };
+  var wsb=document.getElementById("wsave");
+  if(wsb) wsb.onclick=function(){
+    var inp=document.getElementById("wkg"), v=parseFloat(String(inp.value).replace(",","."));
+    if(isNaN(v)||v<=0){ flash("Entre un poids valide"); return; }
+    log.push({type:"weight", date:new Date().toISOString(), kg:v});
+    saveLog(); renderMain(); flash("Poids enregistré");
+  };
 }
 
 /* ---- Historique ---- */
@@ -629,11 +715,22 @@ function viewHist(){
     return h;
   }
   var rev=log.slice().reverse();
+  var led=lastExportDays();
+  var remTxt = led===null ? (log.length?"Jamais exporté — pense à sauvegarder tes données":"") : ("Dernière sauvegarde il y a "+led+" jour"+(led>1?"s":""));
+  var remCls = ((led===null && log.length) || (led!==null && led>=7)) ? " warn" : "";
+  var reminder = remTxt ? '<div class="saverem'+remCls+'">'+remTxt+'</div>' : '';
+  h+=reminder;
   rev.forEach(function(e){
     if(e.type==="stretch"){
       var r=STRETCH.filter(function(x){return x.id===e.routineId;})[0];
       h+='<div class="hentry"><div class="hh"><span class="hs" style="color:'+(r?r.tag:"#fff")+'">'+(r?r.title:"Mobilité")+'</span>'+
          '<span class="hd mono">'+fmtDate(e.date)+'</span></div><div class="hb mono">'+e.done+'/'+e.total+' étirements</div></div>';
+    } else if(e.type==="combat"){
+      h+='<div class="hentry"><div class="hh"><span class="hs" style="color:#8B5CF6">Krav maga</span>'+
+         '<span class="hd mono">'+fmtDate(e.date)+'</span></div><div class="hb mono">séance de combat</div></div>';
+    } else if(e.type==="weight"){
+      h+='<div class="hentry"><div class="hh"><span class="hs" style="color:var(--blue)">Poids</span>'+
+         '<span class="hd mono">'+fmtDate(e.date)+'</span></div><div class="hb mono">'+e.kg+' kg</div></div>';
     } else {
       var s=SESSIONS.filter(function(x){return x.id===e.sessionId;})[0];
       var summary=Object.keys(e.entries).map(function(id){
@@ -664,6 +761,7 @@ function doExport(){
   a.href=url; a.download="ats-"+new Date().toISOString().slice(0,10)+".json";
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  setLastExport(); renderMain();
   flash("Historique exporté");
 }
 document.getElementById("importfile").addEventListener("change", function(ev){
