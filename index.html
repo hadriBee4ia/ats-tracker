@@ -140,6 +140,14 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .pstat{flex:1; background:var(--panel2); border:1px solid var(--border); border-radius:10px; padding:11px 6px; text-align:center;}
 .pstat .pv{font-size:20px; font-weight:700;}
 .pstat .pl{font-size:10px; color:var(--muted); margin-top:2px;}
+.howbtn{margin-top:11px; background:none; border:none; color:var(--violet2); font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; cursor:pointer; padding:0;}
+.howbtn:active{opacity:.6;}
+.howpanel{display:none; margin-top:10px; padding:12px 13px; background:var(--panel2); border:1px solid var(--border); border-radius:10px;}
+.howpanel.open{display:block;}
+.howmove{font-size:13px; color:var(--chalk); line-height:1.55;}
+.howcues{margin-top:11px; display:flex; flex-direction:column; gap:7px;}
+.cue{font-size:12px; color:var(--muted); line-height:1.45; padding-left:16px; position:relative;}
+.cue:before{content:"▸"; position:absolute; left:0; top:1px; color:var(--amber); font-size:10px;}
 </style>
 </head>
 <body>
@@ -230,6 +238,28 @@ var WEEK = [
   { day:"Samedi", idx:6, kind:"force", ref:"s3", label:"Pull", mob:"m3" },
   { day:"Dimanche", idx:0, kind:"combat", label:"Krav maga", mob:"m3" }
 ];
+
+var HOWTO = {
+  s1f1:{ how:"Aux barres parallèles, bras tendus, buste légèrement penché en avant. Plie les coudes pour descendre jusqu'à ce que les épaules passent sous les coudes, puis pousse fort pour remonter.", cues:["Épaules basses, loin des oreilles — jamais haussées","Coudes qui restent près du corps, pas en canard","Penche le buste ~30° en avant pour cibler les pecs","Descente contrôlée, aucun rebond en bas"] },
+  s1f2:{ how:"Position de pompe mais mains au niveau de la taille, doigts vers l'extérieur. En descendant, penche tout le corps vers l'avant pour que les épaules dépassent les mains.", cues:["Corps parfaitement gainé, bassin qui ne tombe pas","Épaules qui avancent au-delà des mains en bas","Coudes proches du corps tout le long","Pousse le haut du dos vers le plafond en haut"] },
+  s1v1:{ how:"Pieds surélevés (déclinées) ou mains en losange sous la poitrine (diamant). Descends la poitrine vers les mains, coudes le long du corps, puis pousse.", cues:["Corps en ligne, pas de creux dans le bas du dos","Coudes à ~45° du tronc, pas écartés à 90°","Amplitude complète : poitrine près du sol","Version diamant = plus de triceps"] },
+  s1v2:{ how:"En V inversé (bassin haut, jambes tendues, pieds surélevés). Descends le sommet de la tête vers le sol entre les mains, puis pousse à la verticale.", cues:["Hanches hautes, regard vers les pieds","Vise un point légèrement devant les mains","Coudes qui partent vers l'arrière, pas sur les côtés","Plus les pieds sont hauts, plus c'est vertical et dur"] },
+  s1v3:{ how:"Suspendu, mains en pronation (paumes vers l'avant), largeur épaules. Tire la poitrine vers la barre, menton au-dessus, puis redescends bras tendus.", cues:["Démarre par les scapulas : abaisse-les avant de tirer","Poitrine sortie, tire les coudes vers le sol","Aucun balancier ni élan de jambes","Descente complète, bras tendus en bas"] },
+  s1c1:{ how:"Suspendu à la barre, monte les jambes (tendues ou genoux fléchis) jusqu'à l'horizontale ou plus, puis redescends lentement.", cues:["Bascule le bassin (rétroversion), pas d'élan","Descente contrôlée, sans balancier","Épaules engagées, ne reste pas pendu mou","Genoux fléchis = version plus facile"] },
+  s2f1:{ how:"Pied arrière posé sur un banc, jambe avant devant toi. Descends en pliant la jambe avant jusqu'à cuisse parallèle au sol, puis remonte en poussant dans le talon.", cues:["Poids sur la jambe avant, talon ancré au sol","Genou avant aligné avec le pied, pas vers l'intérieur","Buste légèrement penché en avant, dos droit","La jambe arrière n'est qu'un appui d'équilibre"] },
+  s2f2:{ how:"À genoux, chevilles bloquées. Descends le buste vers le sol le plus lentement possible, corps gainé et rigide des genoux aux épaules, en freinant avec les ischios.", cues:["Corps en une seule ligne, pas de flexion à la hanche","Freine la descente au maximum (négatif très lent)","Rattrape avec les mains en bas puis pousse pour remonter","Débute avec l'aide des bras si trop dur"] },
+  s2v1:{ how:"Sur une jambe, l'autre tendue devant toi. Descends en flexion complète sur la jambe d'appui, talon au sol, puis remonte.", cues:["Le talon d'appui reste collé au sol","Bras tendus devant pour l'équilibre","Genou qui suit la direction des orteils","Progression : sur une boîte ou assisté à une main"] },
+  s2v2:{ how:"Haut du dos appuyé sur un support, une jambe fléchie pied au sol, l'autre tendue. Monte le bassin en contractant le fessier jusqu'à l'alignement tronc-cuisse, puis redescends.", cues:["Serre fort le fessier en haut, menton rentré","Pousse dans le talon de la jambe au sol","Pas de cambrure excessive du bas du dos en haut","Descente contrôlée"] },
+  s2v3:{ how:"Sur une jambe, avant-pied sur un rebord, talon dans le vide. Monte sur la pointe le plus haut possible, puis descends le talon sous le niveau du rebord.", cues:["Amplitude maximale : bien bas puis bien haut","Pause 1 s en haut, contraction complète","Descente lente pour l'étirement","Tiens-toi à un support pour l'équilibre"] },
+  s2c1:{ how:"Allongé, mains agrippées derrière la tête à un point fixe. Monte le corps gainé à la verticale, puis descends-le lentement en gardant tout le corps rigide, sans toucher le sol.", cues:["Corps parfaitement gainé, une seule ligne rigide","Le mouvement pivote autour des épaules","Descente ultra contrôlée — c'est là que ça travaille","Progression : jambes groupées (tuck) puis tendues"] },
+  s2c2:{ how:"Sur le dos, bras et jambes tendus. Décolle épaules et jambes du sol en creusant le ventre, bas du dos plaqué au sol, corps en forme de banane.", cues:["Bas du dos collé au sol en permanence (le point clé)","Nombril rentré, côtes basses","Plus les bras et jambes sont tendus loin, plus c'est dur","Respire sans relâcher le gainage"] },
+  s3f1:{ how:"Suspendu, mains en pronation largeur épaules, poids ajouté au sac ou à la ceinture. Tire le menton au-dessus de la barre, puis redescends bras tendus.", cues:["Abaisse les scapulas avant de tirer","Tire les coudes vers le bas et l'arrière","Corps gainé, aucun balancier","Amplitude complète en haut comme en bas"] },
+  s3f2:{ how:"Suspendu, tire le corps à l'horizontale, face vers le ciel, corps parallèle au sol et parfaitement gainé, bras tendus. Tiens la position.", cues:["Bras tendus, scapulas abaissées et resserrées","Gaine fort : fessiers et abdos serrés, corps rigide","Progression : genoux groupés → une jambe → tendu","Pense à tirer la barre vers tes hanches"] },
+  s3v1:{ how:"Suspendu, mains en supination (paumes vers toi), largeur épaules. Tire le menton au-dessus de la barre, coudes le long du corps, puis redescends tendu.", cues:["Coudes qui restent près du tronc","Sollicite plus les biceps que la version pronation","Poitrine vers la barre, pas le menton qui s'avance","Descente complète et contrôlée"] },
+  s3v2:{ how:"Sous une barre basse, corps gainé en ligne, talons au sol. Tire la poitrine vers la barre en resserrant les omoplates, puis redescends bras tendus.", cues:["Corps parfaitement droit, bassin qui ne tombe pas","Resserre bien les omoplates en haut","Tire vers le sternum, coudes le long du corps","Plus le corps est horizontal, plus c'est dur"] },
+  s3v3:{ how:"Aux barres parallèles, descends en pliant les coudes jusqu'à ce que les épaules passent sous les coudes, puis pousse pour remonter.", cues:["Épaules basses, loin des oreilles","Coudes près du corps","Buste vertical = plus de triceps ; penché = plus de pecs","Aucun rebond en bas"] },
+  s3c1:{ how:"Toes-to-bar : suspendu, monte les pieds jusqu'à toucher la barre, jambes tendues. L-sit : en appui bras tendus, jambes tendues à l'horizontale devant toi.", cues:["Bascule du bassin, pas d'élan (toes-to-bar)","Épaules abaissées et engagées (L-sit)","Jambes tendues, pointes de pieds allongées","Progression L-sit : genoux groupés puis tendus"] }
+};
 
 var ALL_ITEMS = {}, EX_TAG = {};
 SESSIONS.forEach(function(s){ s.blocks.forEach(function(b){ b.items.forEach(function(it){ ALL_ITEMS[it.id]=it; EX_TAG[it.id]=s.tag; }); }); });
@@ -359,6 +389,10 @@ function viewForce(){
       h+='<div class="card"><div class="nm">'+it.name+'</div>'+
          '<div class="rx"><b class="mono">'+it.sets+' × '+it.reps+'</b> · repos '+it.rest+'</div>'+
          (it.note?'<div class="note">'+it.note+'</div>':'');
+      var ht=HOWTO[it.id];
+      if(ht){ h+='<button class="howbtn" data-how="'+it.id+'">Comment faire ›</button>'+
+        '<div class="howpanel" id="how-'+it.id+'"><div class="howmove">'+esc(ht.how)+'</div>'+
+        '<div class="howcues">'+ht.cues.map(function(c){return '<div class="cue">'+esc(c)+'</div>';}).join("")+'</div></div>'; }
       if(prev){ h+='<div class="last">dernière fois : <span class="mono">'+prev.map(function(s){return (s.reps||"·")+(s.load?"+"+s.load+"kg":"");}).join("  ·  ")+'</span></div>'; }
       h+='<div class="sets">';
       for(var i=0;i<it.sets;i++){
@@ -387,6 +421,13 @@ function wireForce(){
       row.classList.toggle("done"); btn.classList.toggle("on");
       refreshFinishForce();
       if(nowDone){ startTimer(parseInt(btn.getAttribute("data-rest"),10), "Repos · "+btn.getAttribute("data-name")); }
+    };
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("#main .howbtn"), function(btn){
+    btn.onclick=function(){
+      var p=document.getElementById("how-"+btn.getAttribute("data-how"));
+      var open=p.classList.toggle("open");
+      btn.textContent = open ? "Masquer les détails" : "Comment faire ›";
     };
   });
   Array.prototype.forEach.call(document.querySelectorAll("#main .inp"), function(inp){
