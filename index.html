@@ -261,6 +261,27 @@ var HOWTO = {
   s3c1:{ how:"Toes-to-bar : suspendu, monte les pieds jusqu'à toucher la barre, jambes tendues. L-sit : en appui bras tendus, jambes tendues à l'horizontale devant toi.", cues:["Bascule du bassin, pas d'élan (toes-to-bar)","Épaules abaissées et engagées (L-sit)","Jambes tendues, pointes de pieds allongées","Progression L-sit : genoux groupés puis tendus"] }
 };
 
+var STRETCH_HOW = {
+  m1a:{ how:"Avant-bras posé verticalement contre un montant de porte, coude à hauteur d'épaule. Avance doucement le buste et tourne légèrement le tronc vers l'extérieur.", cues:["Coude à ~90°, à hauteur d'épaule","Étirement dans la poitrine, pas dans l'épaule avant","Relâche un peu plus à chaque expiration"] },
+  m1b:{ how:"Amène un bras tendu en travers de la poitrine, attrape-le avec l'autre au-dessus du coude et tire-le vers toi.", cues:["Épaule basse, ne la hausse pas","Tire au-dessus du coude, pas sur l'articulation","Garde le buste de face, sans le tourner"] },
+  m1c:{ how:"Lève un bras, plie le coude pour poser la main entre les omoplates, puis pousse doucement le coude vers le bas avec l'autre main.", cues:["Coude pointé vers le plafond","Ne force pas dans le cou","Grandis-toi, ne cambre pas le bas du dos"] },
+  m1d:{ how:"À quatre pattes, paumes au sol, doigts pointés vers tes genoux. Recule doucement le bassin pour étirer l'avant des avant-bras.", cues:["Paumes bien à plat","Recule progressivement, sans à-coup","Tension modérée, jamais douloureuse"] },
+  m1e:{ how:"À quatre pattes, dos des mains au sol, doigts vers toi. Transfère doucement le poids vers l'arrière pour étirer le dessus des avant-bras.", cues:["Pression très douce, les poignets sont fragiles","Dos des mains à plat autant que possible","Recule très progressivement"] },
+  m1f:{ how:"Bâton ou élastique tenu large devant toi, bras tendus. Passe-le lentement au-dessus de la tête vers l'arrière, puis reviens.", cues:["Prise large au début, resserre avec le temps","Bras tendus tout le long","Mouvement lent, jamais forcé"] },
+  m2a:{ how:"Une jambe tendue devant, talon au sol, pointe vers le haut. Penche le buste vers l'avant à partir des hanches, dos droit.", cues:["Plie aux hanches, pas dans le dos","Étirement à l'arrière de la cuisse","Ne verrouille pas violemment le genou"] },
+  m2b:{ how:"En fente, genou arrière au sol, jambe avant à 90°. Bascule le bassin vers l'avant (rentre le pubis) jusqu'à sentir l'avant de la hanche arrière.", cues:["La bascule du bassin est la clé de l'étirement","Le genou avant ne dépasse pas la pointe du pied","Buste droit, gaine légèrement"] },
+  m2c:{ how:"Debout, attrape ta cheville derrière toi et ramène le talon vers la fesse, genoux serrés.", cues:["Genoux collés l'un à l'autre","Rentre le bassin pour intensifier","Tiens-toi à un mur pour l'équilibre"] },
+  m2d:{ how:"Descends en squat complet, talons au sol, et reste en bas. Pousse les genoux vers l'extérieur avec les coudes.", cues:["Talons ancrés au sol","Pousse les genoux vers l'extérieur","Buste le plus droit possible, respire"] },
+  m2e:{ how:"À quatre pattes, écarte les genoux, tibias au sol, puis recule le bassin vers les talons jusqu'à sentir l'intérieur des cuisses.", cues:["Recule doucement, sans forcer","Garde le bas du dos neutre","Étirement à l'intérieur des cuisses"] },
+  m2f:{ how:"Mains au mur, une jambe tendue vers l'arrière, talon au sol, avance le bassin. Puis plie légèrement ce genou pour cibler le mollet profond.", cues:["Talon arrière collé au sol","Jambe tendue = mollet superficiel, fléchie = profond","Pieds bien parallèles"] },
+  m3a:{ how:"Suspends-toi à la barre, bras tendus, et relâche progressivement épaules et dos en laissant le corps s'allonger.", cues:["Relâche sans lâcher la prise","Respire, laisse les dorsaux s'ouvrir","Engage un peu les scapulas si l'épaule tire"] },
+  m3b:{ how:"À quatre pattes, une main derrière la tête. Ouvre le coude vers le plafond en tournant le haut du dos, puis reviens.", cues:["Le mouvement vient du haut du dos, pas du bas","Suis le coude du regard","Bassin stable, ne tourne pas les hanches"] },
+  m3c:{ how:"Une jambe repliée devant toi (tibia vers l'avant), l'autre tendue derrière. Descends le buste vers l'avant jusqu'à sentir le fessier.", cues:["Hanches parallèles, ne bascule pas sur le côté","Étirement dans le fessier de la jambe avant","Descends progressivement sur les avant-bras"] },
+  m3d:{ how:"Tête droite, effectue de lents demi-cercles d'une épaule à l'autre en passant par l'avant.", cues:["Mouvement lent et contrôlé","Ne bascule pas la tête loin en arrière","Épaules relâchées et basses"] },
+  m3e:{ how:"Allongé sur le côté, épaule dessous à 90°, coude plié. Avec l'autre main, pousse doucement l'avant-bras vers le sol.", cues:["Pression très douce (rotateurs fragiles)","L'épaule reste plaquée au sol","Arrête à la première tension, sans douleur"] },
+  m3f:{ how:"Debout, un bras au-dessus de la tête, incline le buste sur le côté opposé en gardant le bassin fixe.", cues:["Reste dans le plan, ne te penche pas en avant","Bassin stable, ne le décale pas","Grandis-toi avant de t'incliner"] }
+};
+
 var ALL_ITEMS = {}, EX_TAG = {};
 SESSIONS.forEach(function(s){ s.blocks.forEach(function(b){ b.items.forEach(function(it){ ALL_ITEMS[it.id]=it; EX_TAG[it.id]=s.tag; }); }); });
 
@@ -478,8 +499,12 @@ function viewMobilite(){
   h+='<div class="block"><div class="elabel">Étirements · tenue lente, sans à-coups</div>';
   r.items.forEach(function(it){
     h+='<div class="card"><div class="nm">'+it.name+'</div>'+
-       '<div class="rx"><b class="mono">'+it.hold+'</b>'+(it.note?" · "+it.note:"")+'</div>'+
-       '<div class="stretch-actions">'+
+       '<div class="rx"><b class="mono">'+it.hold+'</b>'+(it.note?" · "+it.note:"")+'</div>';
+    var ht=STRETCH_HOW[it.id];
+    if(ht){ h+='<button class="howbtn" data-how="'+it.id+'">Comment faire ›</button>'+
+      '<div class="howpanel" id="how-'+it.id+'"><div class="howmove">'+esc(ht.how)+'</div>'+
+      '<div class="howcues">'+ht.cues.map(function(c){return '<div class="cue">'+esc(c)+'</div>';}).join("")+'</div></div>'; }
+    h+='<div class="stretch-actions">'+
        '<button class="play" data-hold="'+it.holdSec+'" data-name="'+esc(it.name)+'">▶ Démarrer '+it.holdSec+'s</button>'+
        '<button class="check" data-str="'+it.id+'" aria-label="Étirement fait">'+CHECK_SVG+'</button></div></div>';
   });
@@ -496,6 +521,13 @@ function wireMobilite(){
   });
   Array.prototype.forEach.call(document.querySelectorAll("#main .check[data-str]"), function(btn){
     btn.onclick=function(){ btn.classList.toggle("on"); refreshFinishStretch(); };
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("#main .howbtn"), function(btn){
+    btn.onclick=function(){
+      var p=document.getElementById("how-"+btn.getAttribute("data-how"));
+      var open=p.classList.toggle("open");
+      btn.textContent = open ? "Masquer les détails" : "Comment faire ›";
+    };
   });
   var fin=document.getElementById("finishStretch");
   if(fin) fin.onclick=finishStretch;
