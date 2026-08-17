@@ -158,11 +158,34 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .winp:focus{border-color:var(--amber);}
 .wsave{border:none; border-radius:9px; background:var(--amber); color:#fff; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; padding:0 16px; cursor:pointer;}
 .wsave:active{transform:scale(.98);}
+.wsave2{background:var(--panel2); color:var(--chalk); border:1px solid var(--border);}
+.wtargetline{margin-top:12px; font-size:12px; font-weight:600; color:var(--green); background:rgba(52,211,153,.1); border:1px solid rgba(52,211,153,.3); border-radius:8px; padding:9px 11px; text-align:center;}
+.sexseg{flex:1; display:flex; gap:6px;}
+.sexbtn{flex:1; background:var(--panel2); border:1px solid var(--border); color:var(--muted); border-radius:9px; padding:10px 4px; font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; cursor:pointer;}
+.sexbtn.on{background:var(--amber); border-color:var(--amber); color:#fff;}
 .plabel{font-size:11px; font-weight:700; letter-spacing:1.5px; color:var(--muted); text-transform:uppercase; margin:2px 0 10px;}
 .wload{display:flex; gap:8px; margin:0 20px 16px;}
 .wloaditem{flex:1; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px 6px; text-align:center;}
 .wloaditem .wv{font-size:19px; font-weight:700;}
 .wloaditem .wl{font-size:10px; color:var(--muted); margin-top:1px;}
+.ecard{margin:0 20px 16px; background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:15px;}
+.etitle{font-size:13px; font-weight:700; letter-spacing:.3px; margin-bottom:12px;}
+.erow{display:flex; justify-content:space-between; font-size:13px; margin-bottom:2px;}
+.erow span:first-child{color:var(--muted);}
+.erow .mono{color:var(--chalk); font-weight:600;}
+.ebar{height:9px; background:var(--panel2); border-radius:5px; overflow:hidden; margin:8px 0 10px;}
+.ebar>div{height:100%; transition:width .2s;}
+.ebar>div.good{background:linear-gradient(90deg,var(--green),var(--blue));}
+.ebar>div.over{background:linear-gradient(90deg,var(--amber),#F87171);}
+.enet{font-size:14px; font-weight:700; text-align:center; margin-bottom:10px;}
+.enet.good{color:var(--green);}
+.enet.over{color:var(--amber);}
+.ebreak{font-size:11px; color:var(--muted); text-align:center; margin-bottom:12px;}
+.erow2{display:flex; gap:8px;}
+.einp{flex:1; background:var(--panel2); border:1px solid var(--border); border-radius:9px; color:var(--chalk); font-family:'JetBrains Mono',monospace; font-size:15px; padding:10px; outline:none;}
+.einp:focus{border-color:var(--amber);}
+.eok{border:none; border-radius:9px; background:var(--amber); color:#fff; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; padding:0 20px; cursor:pointer;}
+.ecap{font-size:11px; color:var(--muted); margin-top:10px; line-height:1.5; text-align:center;}
 .combatbtn{width:100%; margin-top:14px; border:none; border-radius:12px; padding:14px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:#fff; background:var(--amber); cursor:pointer;}
 .combatbtn:active{transform:scale(.99);}
 .combatbtn.done{background:var(--panel2); color:var(--green); border:1px solid rgba(52,211,153,.4);}
@@ -454,6 +477,22 @@ function viewSemaine(){
      '<div class="wloaditem"><div class="wv mono">'+wl.f+'</div><div class="wl">force</div></div>'+
      '<div class="wloaditem"><div class="wv mono">'+wl.c+'</div><div class="wl">combat</div></div>'+
      '<div class="wloaditem"><div class="wv mono">'+wl.m+'</div><div class="wl">mobilité</div></div></div>';
+  var ekg=latestWeight();
+  h+='<div class="ecard"><div class="etitle">Balance énergétique du jour</div>';
+  if(ekg==null){
+    h+='<div class="ecap">Renseigne ton poids dans l\'onglet Progrès pour activer la balance calories.</div>'+
+       '<div class="erow2"><input class="einp" id="stepsinp" inputmode="numeric" placeholder="nombre de pas"'+(stepsToday()?' value="'+stepsToday()+'"':'')+'><button class="eok" id="stepsok">OK</button></div></div>';
+  } else {
+    var ebase=bmr(ekg), estp=stepsToday(), estpK=Math.round(estp*ekg*0.0005), esp=sportBurn(ekg);
+    var edep=ebase+estpK+esp, econs=consumedToday(ekg), enet=econs-edep;
+    var epct=edep>0?Math.min(100,Math.round(econs/edep*100)):0, good=(enet<=0);
+    h+='<div class="erow"><span>Consommé (repas cochés)</span><span class="mono">'+econs+' / '+edep+' kcal</span></div>'+
+       '<div class="ebar"><div class="'+(good?"good":"over")+'" style="width:'+epct+'%"></div></div>'+
+       '<div class="enet '+(good?"good":"over")+'">'+(enet<0?("Déficit de "+(-enet)+" kcal"):(enet>0?("Surplus de "+enet+" kcal"):"À l'équilibre"))+'</div>'+
+       '<div class="ebreak">Brûlé : base '+ebase+' · pas '+estpK+' · sport '+esp+' kcal</div>'+
+       '<div class="erow2"><input class="einp" id="stepsinp" inputmode="numeric" placeholder="nombre de pas"'+(estp?' value="'+estp+'"':'')+'><button class="eok" id="stepsok">OK</button></div>'+
+       '<div class="ecap">Brûlé = métabolisme de base (Mifflin si taille/âge renseignés dans Progrès) + pas + sport. Consommé = repas cochés dans Nutrition. Pour perdre du poids, vise le déficit (vert).</div></div>';
+  }
   h+='<div class="weeklist"><div class="wlabel">La semaine</div>';
   WEEK.forEach(function(w){
     var s=(w.kind==="force")?SESSIONS.filter(function(x){return x.id===w.ref;})[0]:null;
@@ -479,6 +518,12 @@ function wireSemaine(){
   Array.prototype.forEach.call(document.querySelectorAll("[data-combat]"), function(el){
     el.onclick=function(){ if(combatDoneToday()) return; log.push({type:"combat", date:new Date().toISOString(), label:"Krav maga"}); saveLog(); renderMain(); renderHeader(); flash("Krav maga enregistré"); };
   });
+  var sk=document.getElementById("stepsok");
+  if(sk) sk.onclick=function(){
+    var inp=document.getElementById("stepsinp"), v=parseInt(String(inp.value).replace(/[^0-9]/g,""),10);
+    if(isNaN(v)||v<0){ flash("Nombre de pas invalide"); return; }
+    setSteps(v); renderMain(); flash("Pas enregistrés");
+  };
 }
 
 /* ---- Force ---- */
@@ -693,10 +738,11 @@ function buildChart(cur){
   var cap='<div class="pcap">Reps totales par séance'+(n<2?' · une seule séance pour l\'instant — reviens après la prochaine pour voir la courbe':'')+'</div>';
   return '<div class="chartcard">'+svg+cap+stats+'</div>';
 }
-function buildWeightChart(s){
+function buildWeightChart(s, target){
   var n=s.length, W=320,H=150,padL=34,padR=12,padT=12,padB=24;
   var vals=s.map(function(d){return d.v;});
   var mn=Math.min.apply(null,vals), mx=Math.max.apply(null,vals);
+  if(target){ mn=Math.min(mn,target); mx=Math.max(mx,target); }
   var yMin=Math.floor(mn-1), yMax=Math.ceil(mx+1); if(yMax<=yMin) yMax=yMin+1;
   function X(i){ return n<=1?(padL+(W-padL-padR)/2):padL+i*(W-padL-padR)/(n-1); }
   function Y(v){ return padT+(H-padT-padB)*(1-(v-yMin)/(yMax-yMin)); }
@@ -705,23 +751,38 @@ function buildWeightChart(s){
     grid+='<line x1="'+padL+'" y1="'+y+'" x2="'+(W-padR)+'" y2="'+y+'" stroke="var(--border)" stroke-width="1"/>';
     grid+='<text x="'+(padL-6)+'" y="'+(y+3)+'" fill="var(--muted)" font-size="9" text-anchor="end" font-family="monospace">'+yv+'</text>';
   });
+  var tline="";
+  if(target){ var ty=Y(target); tline='<line x1="'+padL+'" y1="'+ty+'" x2="'+(W-padR)+'" y2="'+ty+'" stroke="var(--green)" stroke-width="1.5" stroke-dasharray="4 3"/>'+
+    '<text x="'+(W-padR)+'" y="'+(ty-4)+'" fill="var(--green)" font-size="9" text-anchor="end" font-family="monospace">objectif '+target+'</text>'; }
   var pts=s.map(function(d,i){return X(i)+","+Y(d.v);});
   var poly=n>1?'<polyline points="'+pts.join(" ")+'" fill="none" stroke="url(#wline)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>':"";
   var dots=""; s.forEach(function(d,i){ dots+='<circle cx="'+X(i)+'" cy="'+Y(d.v)+'" r="'+(i===n-1?4:3)+'" fill="'+(i===n-1?"var(--blue)":"var(--panel)")+'" stroke="var(--blue)" stroke-width="2"/>'; });
   var xlab='<text x="'+X(0)+'" y="'+(H-7)+'" fill="var(--muted)" font-size="9" text-anchor="middle" font-family="monospace">'+fmtDate(s[0].date)+'</text>';
   if(n>1) xlab+='<text x="'+X(n-1)+'" y="'+(H-7)+'" fill="var(--muted)" font-size="9" text-anchor="middle" font-family="monospace">'+fmtDate(s[n-1].date)+'</text>';
-  var svg='<svg viewBox="0 0 '+W+' '+H+'" class="chart" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="wline" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--violet2)"/><stop offset="1" stop-color="var(--blue)"/></linearGradient></defs>'+grid+poly+dots+xlab+'</svg>';
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" class="chart" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="wline" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--violet2)"/><stop offset="1" stop-color="var(--blue)"/></linearGradient></defs>'+grid+tline+poly+dots+xlab+'</svg>';
   var last=s[n-1].v, first=s[0].v, delta=Math.round((last-first)*10)/10, ds=(delta>0?"+":"")+delta;
   return svg+'<div class="pstats"><div class="pstat"><div class="pv mono">'+last+'</div><div class="pl">kg (dernier)</div></div>'+
     '<div class="pstat"><div class="pv mono">'+ds+'</div><div class="pl">évolution</div></div>'+
     '<div class="pstat"><div class="pv mono">'+n+'</div><div class="pl">mesures</div></div></div>';
 }
+function targetWeight(){ var v=rawGet("ats:targetweight"); if(!v) return null; var n=parseFloat(v); return isNaN(n)?null:n; }
+function setTargetWeight(v){ rawSet("ats:targetweight", String(v)); }
 function viewProgress(){
-  var ws=weightSeries(), exs=progExercises();
+  var ws=weightSeries(), exs=progExercises(), tw=targetWeight();
   var h='<div class="prog">';
   h+='<div class="wcard"><div class="wtitle">Poids du corps</div>'+
-     '<div class="wrow2"><input class="winp" id="wkg" inputmode="decimal" placeholder="ex. 74.5"><button class="wsave" id="wsave">Enregistrer</button></div>';
-  h+= ws.length ? buildWeightChart(ws) : '<div class="pcap">Note ton poids pour lancer la courbe.</div>';
+     '<div class="wrow2"><input class="winp" id="wkg" inputmode="decimal" placeholder="poids du jour (kg)"><button class="wsave" id="wsave">Enregistrer</button></div>'+
+     '<div class="wrow2" style="margin-top:8px"><input class="winp" id="wtarget" inputmode="decimal" placeholder="poids cible (kg)"'+(tw?' value="'+tw+'"':'')+'><button class="wsave wsave2" id="wtsave">Objectif</button></div>';
+  h+= ws.length ? buildWeightChart(ws, tw) : '<div class="pcap">Note ton poids pour lancer la courbe.</div>';
+  if(tw && ws.length){ var last=ws[ws.length-1].v, diff=Math.round((last-tw)*10)/10;
+    h+='<div class="wtargetline">'+(diff>0?('Objectif '+tw+' kg · reste '+diff+' kg à perdre'):(diff<0?('Objectif '+tw+' kg · '+(-diff)+' kg sous la cible'):'Objectif '+tw+' kg · atteint 🎯'))+'</div>'; }
+  h+='</div>';
+  var p=getProfile();
+  h+='<div class="wcard"><div class="wtitle">Profil — pour le métabolisme</div>'+
+     '<div class="wrow2"><input class="winp" id="pheight" inputmode="numeric" placeholder="taille (cm)"'+(p.h?' value="'+p.h+'"':'')+'><input class="winp" id="page" inputmode="numeric" placeholder="âge"'+(p.age?' value="'+p.age+'"':'')+'></div>'+
+     '<div class="wrow2" style="margin-top:8px"><div class="sexseg"><button class="sexbtn'+(p.sex==="m"?" on":"")+'" data-sex="m">Homme</button><button class="sexbtn'+(p.sex==="f"?" on":"")+'" data-sex="f">Femme</button></div><button class="wsave wsave2" id="psave">OK</button></div>';
+  if(p.h&&p.age&&ws.length){ h+='<div class="pcap" style="margin-top:11px">Métabolisme de base : <b class="mono" style="color:var(--chalk)">'+bmr(ws[ws.length-1].v)+' kcal</b> · Mifflin-St Jeor</div>'; }
+  else { h+='<div class="pcap" style="margin-top:11px">Renseigne taille et âge pour un métabolisme calculé précisément (Mifflin-St Jeor). Sinon : estimation à 22 kcal/kg.</div>'; }
   h+='</div>';
   if(exs.length===0){
     h+='<div class="empty-h">Pas encore de séances de force.<br>Enregistre-en pour voir tes courbes par exercice.</div></div>';
@@ -743,6 +804,22 @@ function wireProgress(){
     if(isNaN(v)||v<=0){ flash("Entre un poids valide"); return; }
     log.push({type:"weight", date:new Date().toISOString(), kg:v});
     saveLog(); renderMain(); flash("Poids enregistré");
+  };
+  var wtb=document.getElementById("wtsave");
+  if(wtb) wtb.onclick=function(){
+    var inp=document.getElementById("wtarget"), v=parseFloat(String(inp.value).replace(",","."));
+    if(isNaN(v)||v<=0){ flash("Entre un poids cible valide"); return; }
+    setTargetWeight(v); renderMain(); flash("Objectif défini");
+  };
+  var sexBtns=document.querySelectorAll("#main .sexbtn");
+  Array.prototype.forEach.call(sexBtns, function(b){ b.onclick=function(){ Array.prototype.forEach.call(sexBtns,function(x){x.classList.remove("on");}); b.classList.add("on"); }; });
+  var ps=document.getElementById("psave");
+  if(ps) ps.onclick=function(){
+    var hv=parseFloat(String(document.getElementById("pheight").value).replace(",",".")); 
+    var av=parseInt(String(document.getElementById("page").value).replace(/[^0-9]/g,""),10);
+    var on=document.querySelector("#main .sexbtn.on"), sx=on?on.getAttribute("data-sex"):"m";
+    if(isNaN(hv)||hv<=0||isNaN(av)||av<=0){ flash("Renseigne taille et âge"); return; }
+    setProfile(hv, av, sx); renderMain(); flash("Profil enregistré");
   };
 }
 
@@ -766,6 +843,46 @@ var GOALS = {
 };
 function getGoal(){ var v=rawGet("ats:goal"); return (v&&GOALS[v])?v:"recomp"; }
 function setGoal(g){ if(GOALS[g]) rawSet("ats:goal", g); }
+var MEAL_PLANS = {
+  train: [
+    {t:"8:00", n:"Petit-déjeuner", f:0.25, p:{food:"Isolat",dens:80}, c:{food:"Flocons d'avoine",dens:60}, extra:"2 œufs + fruits"},
+    {t:"12:30", n:"Déjeuner", f:0.30, p:{food:"Poulet ou poisson",dens:28}, c:{food:"Riz cuit",dens:28}, extra:"légumes 150 g + 1 c. à s. d'huile"},
+    {t:"16:00", n:"Collation", f:0.10, p:{food:"Skyr",dens:10}, extra:"amandes + 1 fruit"},
+    {t:"~1 h avant", n:"Pré-séance", f:0.10, c:{food:"Banane",dens:23}, p:{food:"Isolat",dens:80}},
+    {t:"après", n:"Post-séance", f:0.10, p:{food:"Isolat",dens:80}, extra:"1 fruit, puis un repas dans l'heure"},
+    {t:"20:30", n:"Dîner", f:0.15, p:{food:"Poisson ou bœuf maigre",dens:26}, c:{food:"Patate douce",dens:20}, extra:"légumes 150 g"}
+  ],
+  rest: [
+    {t:"8:30", n:"Petit-déjeuner", f:0.30, p:{food:"Isolat",dens:80}, c:{food:"Flocons ou pain complet",dens:55}, extra:"2 œufs + fruits"},
+    {t:"13:00", n:"Déjeuner", f:0.35, p:{food:"Poulet ou poisson",dens:28}, c:{food:"Riz cuit",dens:28}, extra:"légumes 150 g + huile"},
+    {t:"16:30", n:"Collation", f:0.15, p:{food:"Fromage blanc",dens:10}, extra:"amandes + 1 fruit"},
+    {t:"20:00", n:"Dîner", f:0.20, p:{food:"Poisson, tofu ou bœuf maigre",dens:26}, c:{food:"Patate douce ou légumineuses",dens:20}, extra:"légumes 150 g"}
+  ]
+};
+function dailyTargets(kg){
+  var G=GOALS[getGoal()], units=todayTrainingUnits().units;
+  var prot=Math.round(kg*G.prot), fat=Math.round(kg*G.fat), carbs=Math.round(kg*G.cbase)+units*G.cunit;
+  return { prot:prot, fat:fat, carbs:carbs, kcal:prot*4+fat*9+carbs*4, units:units };
+}
+function stepsToday(){ var v=rawGet("ats:steps:"+dayKey()); var n=parseInt(v,10); return isNaN(n)?0:n; }
+function setSteps(n){ rawSet("ats:steps:"+dayKey(), String(n)); }
+function sportBurn(kg){
+  var t=new Date(); t.setHours(0,0,0,0); var b=0;
+  log.forEach(function(e){ if(new Date(e.date)>=t){ if(e.type==="strength"||(!e.type&&e.entries)) b+=kg*4; else if(e.type==="combat") b+=kg*7; } });
+  return Math.round(b);
+}
+function consumedToday(kg){
+  var T=dailyTargets(kg), plan=(T.units>0?MEAL_PLANS.train:MEAL_PLANS.rest), done=mealsDone(), c=0;
+  plan.forEach(function(m){ if(done.indexOf(m.n)>=0) c+=Math.round(T.kcal*m.f); });
+  return c;
+}
+function getProfile(){ var h=parseFloat(rawGet("ats:height")), a=parseInt(rawGet("ats:age"),10), s=rawGet("ats:sex"); return { h:isNaN(h)?null:h, age:isNaN(a)?null:a, sex:(s==="f"?"f":"m") }; }
+function setProfile(h,a,s){ rawSet("ats:height",String(h)); rawSet("ats:age",String(a)); rawSet("ats:sex",s); }
+function bmr(kg){
+  var p=getProfile();
+  if(p.h && p.age){ return Math.round(10*kg + 6.25*p.h - 5*p.age + (p.sex==="f"?-161:5)); }
+  return Math.round(kg*22);
+}
 function ntile(v,l,cls){ return '<div class="ntile ntile-'+cls+'"><div class="nv mono">'+v+'</div><div class="nl">'+l+'</div></div>'; }
 function viewNutrition(){
   var kg=latestWeight();
@@ -791,19 +908,7 @@ function viewNutrition(){
   h+='<div class="ngrid">'+ntile(kcal,"kcal","cal")+ntile(prot+" g","protéines","p")+ntile(carbs+" g","glucides","c")+ntile(fat+" g","lipides","f")+'</div>';
   h+='<div class="nwater">💧 Eau : <b class="mono">'+(Math.round(water*10)/10)+' L</b> / jour — davantage les jours de séance et de krav</div>';
   var training=units>0;
-  var plan = training ? [
-    {t:"8:00", n:"Petit-déjeuner", f:0.25, p:{food:"Isolat",dens:80}, c:{food:"Flocons d'avoine",dens:60}, extra:"2 œufs + fruits"},
-    {t:"12:30", n:"Déjeuner", f:0.30, p:{food:"Poulet ou poisson",dens:28}, c:{food:"Riz cuit",dens:28}, extra:"légumes 150 g + 1 c. à s. d'huile"},
-    {t:"16:00", n:"Collation", f:0.10, p:{food:"Skyr",dens:10}, extra:"amandes + 1 fruit"},
-    {t:"~1 h avant", n:"Pré-séance", f:0.10, c:{food:"Banane",dens:23}, p:{food:"Isolat",dens:80}},
-    {t:"après", n:"Post-séance", f:0.10, p:{food:"Isolat",dens:80}, extra:"1 fruit, puis un repas dans l'heure"},
-    {t:"20:30", n:"Dîner", f:0.15, p:{food:"Poisson ou bœuf maigre",dens:26}, c:{food:"Patate douce",dens:20}, extra:"légumes 150 g"}
-  ] : [
-    {t:"8:30", n:"Petit-déjeuner", f:0.30, p:{food:"Isolat",dens:80}, c:{food:"Flocons ou pain complet",dens:55}, extra:"2 œufs + fruits"},
-    {t:"13:00", n:"Déjeuner", f:0.35, p:{food:"Poulet ou poisson",dens:28}, c:{food:"Riz cuit",dens:28}, extra:"légumes 150 g + huile"},
-    {t:"16:30", n:"Collation", f:0.15, p:{food:"Fromage blanc",dens:10}, extra:"amandes + 1 fruit"},
-    {t:"20:00", n:"Dîner", f:0.20, p:{food:"Poisson, tofu ou bœuf maigre",dens:26}, c:{food:"Patate douce ou légumineuses",dens:20}, extra:"légumes 150 g"}
-  ];
+  var plan = training ? MEAL_PLANS.train : MEAL_PLANS.rest;
   var doneSet=mealsDone();
   h+='<div class="nlabel">'+(training?"Répartition du jour d'entraînement":"Répartition — jour de repos")+' · coche tes repas</div>';
   var cKcal=0, cP=0;
