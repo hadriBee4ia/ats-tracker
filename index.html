@@ -154,7 +154,7 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .wcard{background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:18px;}
 .wtitle{font-size:13px; font-weight:700; letter-spacing:.3px; margin-bottom:11px;}
 .wrow2{display:flex; gap:8px; margin-bottom:6px;}
-.winp{flex:1; background:var(--panel2); border:1px solid var(--border); border-radius:9px; color:var(--chalk); font-family:'JetBrains Mono',monospace; font-size:15px; padding:10px; outline:none;}
+.winp{flex:1; min-width:0; background:var(--panel2); border:1px solid var(--border); border-radius:9px; color:var(--chalk); font-family:'JetBrains Mono',monospace; font-size:15px; padding:10px; outline:none;}
 .winp:focus{border-color:var(--amber);}
 .wsave{border:none; border-radius:9px; background:var(--amber); color:#fff; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; padding:0 16px; cursor:pointer;}
 .wsave:active{transform:scale(.98);}
@@ -727,7 +727,7 @@ function buildChart(cur){
   if(n>1) xlab+='<text x="'+X(n-1)+'" y="'+(H-8)+'" fill="var(--muted)" font-size="9" text-anchor="middle" font-family="monospace">'+fmtDate(s[n-1].date)+'</text>';
   var svg='<svg viewBox="0 0 '+W+' '+H+'" class="chart" preserveAspectRatio="xMidYMid meet">'+
     '<defs>'+
-    '<linearGradient id="gline" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--amber)"/><stop offset="1" stop-color="var(--blue)"/></linearGradient>'+
+    '<linearGradient id="gline" gradientUnits="userSpaceOnUse" x1="'+padL+'" y1="0" x2="'+(W-padR)+'" y2="0"><stop offset="0" stop-color="var(--amber)"/><stop offset="1" stop-color="var(--blue)"/></linearGradient>'+
     '<linearGradient id="garea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+tag+'" stop-opacity="0.22"/><stop offset="1" stop-color="'+tag+'" stop-opacity="0"/></linearGradient>'+
     '</defs>'+grid+area+poly+dots+xlab+'</svg>';
   var last=s[n-1].total, first=s[0].total, delta=last-first, ds=(delta>0?"+":"")+delta;
@@ -759,7 +759,7 @@ function buildWeightChart(s, target){
   var dots=""; s.forEach(function(d,i){ dots+='<circle cx="'+X(i)+'" cy="'+Y(d.v)+'" r="'+(i===n-1?4:3)+'" fill="'+(i===n-1?"var(--blue)":"var(--panel)")+'" stroke="var(--blue)" stroke-width="2"/>'; });
   var xlab='<text x="'+X(0)+'" y="'+(H-7)+'" fill="var(--muted)" font-size="9" text-anchor="middle" font-family="monospace">'+fmtDate(s[0].date)+'</text>';
   if(n>1) xlab+='<text x="'+X(n-1)+'" y="'+(H-7)+'" fill="var(--muted)" font-size="9" text-anchor="middle" font-family="monospace">'+fmtDate(s[n-1].date)+'</text>';
-  var svg='<svg viewBox="0 0 '+W+' '+H+'" class="chart" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="wline" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--violet2)"/><stop offset="1" stop-color="var(--blue)"/></linearGradient></defs>'+grid+tline+poly+dots+xlab+'</svg>';
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" class="chart" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="wline" gradientUnits="userSpaceOnUse" x1="'+padL+'" y1="0" x2="'+(W-padR)+'" y2="0"><stop offset="0" stop-color="var(--violet2)"/><stop offset="1" stop-color="var(--blue)"/></linearGradient></defs>'+grid+tline+poly+dots+xlab+'</svg>';
   var last=s[n-1].v, first=s[0].v, delta=Math.round((last-first)*10)/10, ds=(delta>0?"+":"")+delta;
   return svg+'<div class="pstats"><div class="pstat"><div class="pv mono">'+last+'</div><div class="pl">kg (dernier)</div></div>'+
     '<div class="pstat"><div class="pv mono">'+ds+'</div><div class="pl">évolution</div></div>'+
@@ -770,19 +770,19 @@ function setTargetWeight(v){ rawSet("ats:targetweight", String(v)); }
 function viewProgress(){
   var ws=weightSeries(), exs=progExercises(), tw=targetWeight();
   var h='<div class="prog">';
-  h+='<div class="wcard"><div class="wtitle">Poids du corps</div>'+
+  var p=getProfile();
+  h+='<div class="wcard"><div class="wtitle">Profil métabolique</div>'+
+     '<div class="wrow2"><input class="winp" id="pheight" inputmode="numeric" placeholder="taille (cm)"'+(p.h?' value="'+p.h+'"':'')+'><input class="winp" id="page" inputmode="numeric" placeholder="âge"'+(p.age?' value="'+p.age+'"':'')+'></div>'+
+     '<div class="wrow2" style="margin-top:8px"><div class="sexseg"><button class="sexbtn'+(p.sex==="m"?" on":"")+'" data-sex="m">Homme</button><button class="sexbtn'+(p.sex==="f"?" on":"")+'" data-sex="f">Femme</button></div><button class="wsave wsave2" id="psave">OK</button></div>';
+  if(p.h&&p.age&&ws.length){ h+='<div class="pcap" style="margin-top:11px">Métabolisme de base : <b class="mono" style="color:var(--chalk)">'+bmr(ws[ws.length-1].v)+' kcal</b> · Mifflin-St Jeor</div>'; }
+  else { h+='<div class="pcap" style="margin-top:11px">Renseigne taille et âge pour un métabolisme calculé précisément (Mifflin-St Jeor). Sinon : estimation à 22 kcal/kg.</div>'; }
+  h+='</div>';
+  h+='<div class="wcard"><div class="wtitle">Suivi du poids</div>'+
      '<div class="wrow2"><input class="winp" id="wkg" inputmode="decimal" placeholder="poids du jour (kg)"><button class="wsave" id="wsave">Enregistrer</button></div>'+
      '<div class="wrow2" style="margin-top:8px"><input class="winp" id="wtarget" inputmode="decimal" placeholder="poids cible (kg)"'+(tw?' value="'+tw+'"':'')+'><button class="wsave wsave2" id="wtsave">Objectif</button></div>';
   h+= ws.length ? buildWeightChart(ws, tw) : '<div class="pcap">Note ton poids pour lancer la courbe.</div>';
   if(tw && ws.length){ var last=ws[ws.length-1].v, diff=Math.round((last-tw)*10)/10;
     h+='<div class="wtargetline">'+(diff>0?('Objectif '+tw+' kg · reste '+diff+' kg à perdre'):(diff<0?('Objectif '+tw+' kg · '+(-diff)+' kg sous la cible'):'Objectif '+tw+' kg · atteint 🎯'))+'</div>'; }
-  h+='</div>';
-  var p=getProfile();
-  h+='<div class="wcard"><div class="wtitle">Profil — pour le métabolisme</div>'+
-     '<div class="wrow2"><input class="winp" id="pheight" inputmode="numeric" placeholder="taille (cm)"'+(p.h?' value="'+p.h+'"':'')+'><input class="winp" id="page" inputmode="numeric" placeholder="âge"'+(p.age?' value="'+p.age+'"':'')+'></div>'+
-     '<div class="wrow2" style="margin-top:8px"><div class="sexseg"><button class="sexbtn'+(p.sex==="m"?" on":"")+'" data-sex="m">Homme</button><button class="sexbtn'+(p.sex==="f"?" on":"")+'" data-sex="f">Femme</button></div><button class="wsave wsave2" id="psave">OK</button></div>';
-  if(p.h&&p.age&&ws.length){ h+='<div class="pcap" style="margin-top:11px">Métabolisme de base : <b class="mono" style="color:var(--chalk)">'+bmr(ws[ws.length-1].v)+' kcal</b> · Mifflin-St Jeor</div>'; }
-  else { h+='<div class="pcap" style="margin-top:11px">Renseigne taille et âge pour un métabolisme calculé précisément (Mifflin-St Jeor). Sinon : estimation à 22 kcal/kg.</div>'; }
   h+='</div>';
   if(exs.length===0){
     h+='<div class="empty-h">Pas encore de séances de force.<br>Enregistre-en pour voir tes courbes par exercice.</div></div>';
