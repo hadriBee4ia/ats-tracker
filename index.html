@@ -131,6 +131,27 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .wrow .wsub{font-size:11px; color:var(--muted); margin-top:1px;}
 .wrow .nowchip{font-size:9px; font-weight:700; letter-spacing:.5px; color:#fff; background:var(--amber); border-radius:4px; padding:2px 6px; flex:none;}
 .wrow .wgo{color:var(--muted); font-size:20px; flex:none; line-height:1;}
+.cfg{padding:0 20px 20px;}
+.cfgback{background:none; border:none; color:var(--muted); font-family:'Space Grotesk',sans-serif; font-size:13px; cursor:pointer; padding:6px 0; margin-bottom:4px;}
+.cfgtitle{font-size:20px; font-weight:700; letter-spacing:-.3px; margin-bottom:6px;}
+.cfgcap{font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:16px;}
+.cfgrow{display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:9px;}
+.cfgname{font-size:15px; font-weight:600;}
+.cfgsub{font-size:11px; color:var(--muted); font-weight:400; margin-top:1px;}
+.freqseg{display:flex; gap:5px; flex:none;}
+.freqbtn{width:36px; height:36px; border-radius:8px; border:1px solid var(--border); background:var(--panel2); color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:700; cursor:pointer;}
+.freqbtn.on{background:var(--amber); border-color:var(--amber); color:#fff;}
+.kravtgl{flex:none; border:1px solid var(--border); background:var(--panel2); color:var(--muted); border-radius:9px; padding:9px 14px; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; cursor:pointer;}
+.kravtgl.on{background:var(--amber); border-color:var(--amber); color:#fff;}
+.cfgwarn{font-size:12px; color:var(--amber); background:rgba(255,182,39,.08); border:1px solid rgba(255,182,39,.3); border-radius:8px; padding:9px 11px; margin:4px 0 10px;}
+.cfggen{width:100%; border:none; border-radius:12px; padding:15px; font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; color:#fff; background:var(--amber); cursor:pointer; margin-top:6px;}
+.cfggen:disabled{opacity:.4;}
+.cfgday{display:flex; align-items:center; gap:11px; background:var(--panel); border:1px solid var(--border); border-radius:11px; padding:11px 13px; margin-bottom:7px; cursor:pointer;}
+.cfgday:active{transform:scale(.99);}
+.cfgdd{width:76px; flex:none; font-size:13px; font-weight:600; color:var(--muted);}
+.cfgda{flex:1; font-size:14px; font-weight:600;}
+.cfgbtn{width:100%; border:1px dashed var(--border); background:none; color:var(--muted); border-radius:11px; padding:13px; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; cursor:pointer; margin-top:6px;}
+.cfgbtn:active{opacity:.6;}
 .prog{padding:0 20px;}
 .progsel{width:100%; background:var(--panel2); border:1px solid var(--border); color:var(--chalk); border-radius:10px; padding:12px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; margin-bottom:14px; -webkit-appearance:none; appearance:none;}
 .chartcard{background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:14px;}
@@ -250,7 +271,7 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
    ============================================================ */
 
 var SESSIONS = [
-  { id:"s1", n:"01", title:"Push", long:"Haut du corps · priorité poussée", tag:"#E879F9", blocks:[
+  { id:"s1", n:"01", title:"Push", long:"Haut du corps · priorité poussée", tag:"#E879F9", mob:"m1", blocks:[
     { label:"Force", items:[
       { id:"s1f1", name:"Dips lestées", sets:5, reps:"4–6", rest:"2–3 min", restSec:150, note:"RIR 1–2 · lest au sac", load:true },
       { id:"s1f2", name:"Pseudo-planche push-ups", sets:4, reps:"5–8", rest:"2 min", restSec:120, note:"corps incliné vers l'avant" } ]},
@@ -261,7 +282,7 @@ var SESSIONS = [
     { label:"Core", items:[
       { id:"s1c1", name:"Relevés de jambes suspendus", sets:3, reps:"8–12", rest:"60 s", restSec:60, note:"descente contrôlée" } ]}
   ]},
-  { id:"s2", n:"02", title:"Jambes", long:"Bas du corps + core · priorité jambes", tag:"#38BDF8", blocks:[
+  { id:"s2", n:"02", title:"Jambes", long:"Bas du corps + core · priorité jambes", tag:"#38BDF8", mob:"m2", blocks:[
     { label:"Force", items:[
       { id:"s2f1", name:"Squats bulgares lestés", sets:4, reps:"6–8 /j", rest:"2 min", restSec:120, note:"RIR 1–2", load:true },
       { id:"s2f2", name:"Nordic curls", sets:4, reps:"4–8", rest:"2 min", restSec:120, note:"assisté / négatif si besoin" } ]},
@@ -273,7 +294,7 @@ var SESSIONS = [
       { id:"s2c1", name:"Dragon flag", sets:3, reps:"4–8", rest:"90 s", restSec:90, note:"tuck / négatif" },
       { id:"s2c2", name:"Gainage hollow body", sets:3, reps:"30–45 s", rest:"45 s", restSec:45, note:"lombaires plaquées" } ]}
   ]},
-  { id:"s3", n:"03", title:"Pull", long:"Haut du corps · priorité tirage", tag:"#A78BFA", blocks:[
+  { id:"s3", n:"03", title:"Pull", long:"Haut du corps · priorité tirage", tag:"#A78BFA", mob:"m3", blocks:[
     { label:"Force", items:[
       { id:"s3f1", name:"Tractions lestées", sets:5, reps:"4–6", rest:"2–3 min", restSec:150, note:"RIR 1–2 · lest au sac", load:true },
       { id:"s3f2", name:"Front lever (progression)", sets:4, reps:"8–15 s", rest:"2 min", restSec:120, note:"tuck → straddle" } ]},
@@ -283,6 +304,63 @@ var SESSIONS = [
       { id:"s3v3", name:"Dips (sans lest)", sets:3, reps:"8–12", rest:"75 s", restSec:75, note:"maintient le push" } ]},
     { label:"Core", items:[
       { id:"s3c1", name:"Toes-to-bar / L-sit", sets:3, reps:"6–10", rest:"60 s", restSec:60, note:"ou tenue 15–25 s" } ]}
+  ]},
+  { id:"g1", n:"01", title:"Salle Push", long:"Salle · pecs, épaules, triceps", tag:"#E879F9", mob:"m1", blocks:[
+    { label:"Force", items:[
+      { id:"g1f1", name:"Développé couché (barre)", sets:4, reps:"5–8", rest:"2–3 min", restSec:150, note:"omoplates serrées · RIR 1–2", load:true },
+      { id:"g1f2", name:"Développé militaire haltères", sets:4, reps:"6–8", rest:"2 min", restSec:120, note:"gainage, ne cambre pas", load:true } ]},
+    { label:"Volume", items:[
+      { id:"g1v1", name:"Développé incliné haltères", sets:3, reps:"8–12", rest:"90 s", restSec:90, note:"haut des pecs", load:true },
+      { id:"g1v2", name:"Élévations latérales", sets:3, reps:"12–15", rest:"60 s", restSec:60, note:"coudes légèrement fléchis", load:true },
+      { id:"g1v3", name:"Extensions triceps à la poulie", sets:3, reps:"12–15", rest:"60 s", restSec:60, note:"coudes fixes", load:true },
+      { id:"g1v4", name:"Barre au front (skull crusher)", sets:3, reps:"10–12", rest:"75 s", restSec:75, note:"coudes fixes, descends au front", load:true } ]}
+  ]},
+  { id:"g2", n:"02", title:"Salle Pull", long:"Salle · dos, biceps", tag:"#A78BFA", mob:"m3", blocks:[
+    { label:"Force", items:[
+      { id:"g2f1", name:"Tractions ou tirage vertical lesté", sets:4, reps:"6–10", rest:"2 min", restSec:120, note:"tire les coudes vers le bas", load:true },
+      { id:"g2f2", name:"Rowing barre", sets:4, reps:"6–10", rest:"2 min", restSec:120, note:"dos droit, tire au nombril", load:true } ]},
+    { label:"Volume", items:[
+      { id:"g2v1", name:"Tirage horizontal poulie", sets:3, reps:"10–12", rest:"90 s", restSec:90, note:"serre les omoplates", load:true },
+      { id:"g2v2", name:"Curl biceps haltères", sets:3, reps:"10–12", rest:"60 s", restSec:60, note:"coudes fixes", load:true },
+      { id:"g2v3", name:"Face pull", sets:3, reps:"15–20", rest:"60 s", restSec:60, note:"santé des épaules", load:true },
+      { id:"g2v4", name:"Curl marteau (haltères)", sets:3, reps:"10–12", rest:"60 s", restSec:60, note:"prise neutre, cible le brachial", load:true } ]}
+  ]},
+  { id:"g3", n:"03", title:"Salle Jambes", long:"Salle · quadris, ischios, fessiers", tag:"#38BDF8", mob:"m2", blocks:[
+    { label:"Force", items:[
+      { id:"g3f1", name:"Squat barre", sets:4, reps:"5–8", rest:"2–3 min", restSec:150, note:"cuisses parallèles, dos gainé", load:true },
+      { id:"g3f2", name:"Soulevé de terre roumain", sets:4, reps:"6–8", rest:"2 min", restSec:120, note:"dos droit, étire les ischios", load:true } ]},
+    { label:"Volume", items:[
+      { id:"g3v1", name:"Presse à cuisses", sets:3, reps:"10–12", rest:"90 s", restSec:90, note:"amplitude complète", load:true },
+      { id:"g3v2", name:"Leg curl (ischios)", sets:3, reps:"12–15", rest:"60 s", restSec:60, note:"contrôle la descente", load:true },
+      { id:"g3v3", name:"Mollets debout", sets:4, reps:"12–20", rest:"45 s", restSec:45, note:"pause en haut", load:true } ]}
+  ]},
+  { id:"h1", n:"01", title:"Maison Haut", long:"Maison · haut du corps, poids du corps + élastique", tag:"#E879F9", mob:"m1", blocks:[
+    { label:"Force", items:[
+      { id:"h1f1", name:"Pompes (variations)", sets:4, reps:"8–15", rest:"90 s", restSec:90, note:"corps gainé" },
+      { id:"h1f2", name:"Rows sous une table / à l'élastique", sets:4, reps:"10–15", rest:"90 s", restSec:90, note:"tire la poitrine" } ]},
+    { label:"Volume", items:[
+      { id:"h1v1", name:"Pompes pike (épaules)", sets:3, reps:"8–12", rest:"75 s", restSec:75, note:"hanches hautes" },
+      { id:"h1v2", name:"Dips entre deux chaises", sets:3, reps:"8–12", rest:"75 s", restSec:75, note:"épaules basses" },
+      { id:"h1v3", name:"Curl à l'élastique", sets:3, reps:"12–15", rest:"60 s", restSec:60, note:"coudes fixes" } ]}
+  ]},
+  { id:"h2", n:"02", title:"Maison Bas", long:"Maison · bas du corps, poids du corps", tag:"#38BDF8", mob:"m2", blocks:[
+    { label:"Force", items:[
+      { id:"h2f1", name:"Squats au poids du corps", sets:4, reps:"15–20", rest:"90 s", restSec:90, note:"talons ancrés" },
+      { id:"h2f2", name:"Fentes bulgares (pied sur chaise)", sets:4, reps:"8–12 /j", rest:"90 s", restSec:90, note:"poids sur la jambe avant" } ]},
+    { label:"Volume", items:[
+      { id:"h2v1", name:"Fentes marchées", sets:3, reps:"12 /j", rest:"75 s", restSec:75, note:"genou aligné" },
+      { id:"h2v2", name:"Hip thrust au sol", sets:3, reps:"15–20", rest:"60 s", restSec:60, note:"serre les fessiers" },
+      { id:"h2v3", name:"Mollets debout une jambe", sets:3, reps:"15–25", rest:"45 s", restSec:45, note:"amplitude max" } ]}
+  ]},
+  { id:"h3", n:"03", title:"Maison Full", long:"Maison · full body + cardio", tag:"#8B5CF6", mob:"m3", blocks:[
+    { label:"Force", items:[
+      { id:"h3f1", name:"Burpees", sets:4, reps:"10–12", rest:"90 s", restSec:90, note:"rythme régulier" },
+      { id:"h3f2", name:"Pompes", sets:3, reps:"10–15", rest:"75 s", restSec:75, note:"corps gainé" } ]},
+    { label:"Volume", items:[
+      { id:"h3v1", name:"Squats sautés", sets:3, reps:"12–15", rest:"75 s", restSec:75, note:"réception souple" },
+      { id:"h3v2", name:"Mountain climbers", sets:3, reps:"30–40", rest:"60 s", restSec:60, note:"gainage constant" } ]},
+    { label:"Core", items:[
+      { id:"h3c1", name:"Gainage planche", sets:3, reps:"30–45 s", rest:"45 s", restSec:45, note:"corps en ligne" } ]}
   ]}
 ];
 
@@ -311,7 +389,7 @@ var STRETCH = [
 ];
 
 /* idx = Date.getDay() : dimanche=0, lundi=1, ... samedi=6 */
-var WEEK = [
+var DEFAULT_PLAN = [
   { day:"Lundi", idx:1, kind:"force", ref:"s2", label:"Jambes", mob:"m2" },
   { day:"Mardi", idx:2, kind:"repos" },
   { day:"Mercredi", idx:3, kind:"combat", label:"Krav maga", mob:"m3" },
@@ -320,6 +398,43 @@ var WEEK = [
   { day:"Samedi", idx:6, kind:"force", ref:"s3", label:"Pull", mob:"m3" },
   { day:"Dimanche", idx:0, kind:"combat", label:"Krav maga", mob:"m3" }
 ];
+var MODES = {
+  cali:   { label:"Calisthénie", sessions:["s1","s2","s3"] },
+  salle:  { label:"Salle",       sessions:["g1","g2","g3"] },
+  maison: { label:"Maison",      sessions:["h1","h2","h3"] }
+};
+function sessById(id){ return SESSIONS.filter(function(x){return x.id===id;})[0]; }
+function getModeSettings(){ try{ var v=rawGet("ats:modes"); if(v) return JSON.parse(v); }catch(e){} return {cali:3, salle:0, maison:0, krav:true}; }
+function setModeSettings(s){ rawSet("ats:modes", JSON.stringify(s)); }
+function getPlan(){ try{ var v=rawGet("ats:plan"); if(v){ var p=JSON.parse(v); if(p&&p.length===7) return p; } }catch(e){} return DEFAULT_PLAN; }
+function setPlan(p){ rawSet("ats:plan", JSON.stringify(p)); }
+function generatePlan(s){
+  var DAYS=[{day:"Lundi",idx:1},{day:"Mardi",idx:2},{day:"Mercredi",idx:3},{day:"Jeudi",idx:4},{day:"Vendredi",idx:5},{day:"Samedi",idx:6},{day:"Dimanche",idx:0}];
+  var plan=DAYS.map(function(d){ return {day:d.day, idx:d.idx, kind:"repos"}; });
+  if(s.krav){ plan.forEach(function(p){ if(p.idx===3||p.idx===0){ p.kind="combat"; p.label="Krav maga"; p.mob="m3"; } }); }
+  var insts=[];
+  ["cali","salle","maison"].forEach(function(m){ var n=s[m]||0; for(var i=0;i<n;i++) insts.push({mode:m, k:i}); });
+  var order=[1,4,6,2,5,3,0];
+  var used=0;
+  insts.forEach(function(inst){
+    while(used<order.length){ var ix=order[used];
+      var day=plan.filter(function(p){return p.idx===ix;})[0];
+      used++;
+      if(day.kind==="repos"){
+        var mode=MODES[inst.mode], sid=mode.sessions[inst.k % mode.sessions.length], sess=sessById(sid);
+        day.kind="force"; day.ref=sid; day.label=sess?sess.title:sid; day.mob=(sess&&sess.mob)?sess.mob:"m2";
+        break;
+      }
+    }
+  });
+  return plan;
+}
+function planSessions(){
+  var seen={}, out=[];
+  getPlan().forEach(function(w){ if(w.kind==="force" && w.ref && !seen[w.ref]){ seen[w.ref]=1; var s=sessById(w.ref); if(s) out.push(s); } });
+  if(out.length===0) out=[sessById("s1"),sessById("s2"),sessById("s3")].filter(Boolean);
+  return out;
+}
 
 var HOWTO = {
   s1f1:{ how:"Aux barres parallèles, bras tendus, buste légèrement penché en avant. Plie les coudes pour descendre jusqu'à ce que les épaules passent sous les coudes, puis pousse fort pour remonter.", cues:["Épaules basses, loin des oreilles — jamais haussées","Coudes qui restent près du corps, pas en canard","Penche le buste ~30° en avant pour cibler les pecs","Descente contrôlée, aucun rebond en bas"] },
@@ -340,7 +455,20 @@ var HOWTO = {
   s3v1:{ how:"Suspendu, mains en supination (paumes vers toi), largeur épaules. Tire le menton au-dessus de la barre, coudes le long du corps, puis redescends tendu.", cues:["Coudes qui restent près du tronc","Sollicite plus les biceps que la version pronation","Poitrine vers la barre, pas le menton qui s'avance","Descente complète et contrôlée"] },
   s3v2:{ how:"Sous une barre basse, corps gainé en ligne, talons au sol. Tire la poitrine vers la barre en resserrant les omoplates, puis redescends bras tendus.", cues:["Corps parfaitement droit, bassin qui ne tombe pas","Resserre bien les omoplates en haut","Tire vers le sternum, coudes le long du corps","Plus le corps est horizontal, plus c'est dur"] },
   s3v3:{ how:"Aux barres parallèles, descends en pliant les coudes jusqu'à ce que les épaules passent sous les coudes, puis pousse pour remonter.", cues:["Épaules basses, loin des oreilles","Coudes près du corps","Buste vertical = plus de triceps ; penché = plus de pecs","Aucun rebond en bas"] },
-  s3c1:{ how:"Toes-to-bar : suspendu, monte les pieds jusqu'à toucher la barre, jambes tendues. L-sit : en appui bras tendus, jambes tendues à l'horizontale devant toi.", cues:["Bascule du bassin, pas d'élan (toes-to-bar)","Épaules abaissées et engagées (L-sit)","Jambes tendues, pointes de pieds allongées","Progression L-sit : genoux groupés puis tendus"] }
+  s3c1:{ how:"Toes-to-bar : suspendu, monte les pieds jusqu'à toucher la barre, jambes tendues. L-sit : en appui bras tendus, jambes tendues à l'horizontale devant toi.", cues:["Bascule du bassin, pas d'élan (toes-to-bar)","Épaules abaissées et engagées (L-sit)","Jambes tendues, pointes de pieds allongées","Progression L-sit : genoux groupés puis tendus"] },
+  g1f1:{ how:"Allongé sur le banc, pieds au sol, prise un peu plus large que les épaules. Descends la barre vers le milieu de la poitrine en contrôlant, puis pousse.", cues:["Omoplates serrées et basses, léger arch naturel","Coudes à ~45° du tronc, pas écartés à 90°","Poignets solides au-dessus des coudes","Ne rebondis pas sur la poitrine"] },
+  g1f2:{ how:"Debout ou assis, haltères au niveau des épaules. Pousse au-dessus de la tête jusqu'aux bras tendus, puis redescends contrôlé.", cues:["Gaine le tronc, ne cambre pas le bas du dos","Ne monte pas les épaules vers les oreilles","Trajectoire verticale, coudes sous les poignets"] },
+  g2f1:{ how:"Suspendu ou à la poulie haute, tire jusqu'à la poitrine (menton au-dessus de la barre pour les tractions), puis reviens bras tendus.", cues:["Abaisse les scapulas avant de tirer","Tire les coudes vers le bas et l'arrière","Pas de balancier, mouvement contrôlé"] },
+  g2f2:{ how:"Buste penché à ~45°, dos droit, barre le long des jambes. Tire la barre vers le nombril en serrant les omoplates, puis redescends.", cues:["Dos gainé et neutre, jamais rond","Tire au nombril, coudes près du corps","Pas d'à-coups avec le bas du dos"] },
+  g3f1:{ how:"Barre sur le haut du dos, pieds largeur épaules. Descends en poussant les hanches vers l'arrière jusqu'aux cuisses parallèles, puis remonte.", cues:["Talons ancrés, genoux dans l'axe des pieds","Dos gainé, poitrine haute","Descends au moins jusqu'au parallèle","Pousse le sol avec tout le pied"] },
+  g3f2:{ how:"Debout, barre devant les cuisses, léger fléchi des genoux. Descends la barre le long des jambes en poussant les hanches en arrière, dos droit, jusqu'à sentir les ischios, puis reviens.", cues:["Dos parfaitement droit, jamais rond","Le mouvement vient des hanches, pas du dos","Barre qui reste proche des jambes","Genoux à peine fléchis, fixes"] },
+  h1f1:{ how:"Mains au sol un peu plus larges que les épaules, corps gainé de la tête aux talons. Descends la poitrine près du sol, coudes le long du corps, puis pousse.", cues:["Corps en ligne, pas de bassin qui tombe","Coudes à ~45°, pas écartés","Amplitude complète"] },
+  h2f1:{ how:"Pieds largeur épaules. Descends en poussant les hanches vers l'arrière jusqu'aux cuisses parallèles, buste droit, puis remonte en poussant dans les talons.", cues:["Talons au sol, genoux dans l'axe des pieds","Descends jusqu'au parallèle au moins","Buste droit, gaine le tronc"] },
+  h2f2:{ how:"Pied arrière posé sur une chaise, jambe avant devant toi. Descends en pliant la jambe avant jusqu'à cuisse parallèle, puis remonte.", cues:["Poids sur la jambe avant, talon ancré","Genou avant dans l'axe du pied","La jambe arrière n'est qu'un appui"] },
+  h3f1:{ how:"Depuis debout : mains au sol, jette les pieds en arrière en position de planche, une pompe, ramène les pieds, puis saute vers le haut.", cues:["Garde le tronc gainé en position planche","Rythme régulier plutôt que rapide et brouillon","Réception souple sur le saut"] },
+  g1v4:{ how:"Allongé sur le banc, barre (ou haltères) bras tendus au-dessus des épaules. Fléchis les coudes pour descendre la barre vers le front, coudes fixes, puis tends les bras.", cues:["Les coudes ne bougent pas, pointés vers le plafond","Descends vers le front ou juste derrière","Contrôle la descente, ne relâche pas d'un coup"] },
+  g2v4:{ how:"Debout, haltères en prise neutre (paumes face à face). Monte les haltères en fléchissant les coudes sans tourner les poignets, puis redescends contrôlé.", cues:["Prise neutre gardée du début à la fin","Coudes fixes le long du corps","Pas d'élan avec le dos ou les épaules"] }
+
 };
 
 var STRETCH_HOW = {
@@ -440,6 +568,7 @@ function renderMain(){
   else if(m==="prog") html=viewProgress();
   else if(m==="nutrition") html=viewNutrition();
   else if(m==="hist") html=viewHist();
+  else if(m==="settings") html=viewSettings();
   document.getElementById("main").innerHTML=html;
   if(m==="semaine") wireSemaine();
   else if(m==="force") wireForce();
@@ -447,12 +576,13 @@ function renderMain(){
   else if(m==="prog") wireProgress();
   else if(m==="nutrition") wireNutrition();
   else if(m==="hist") wireHist();
+  else if(m==="settings") wireSettings();
 }
 
 /* ---- Semaine ---- */
 function viewSemaine(){
   var dow=new Date().getDay();
-  var tp=WEEK.filter(function(w){return w.idx===dow;})[0];
+  var tp=getPlan().filter(function(w){return w.idx===dow;})[0];
   var h="";
   if(tp.kind==="force"){
     var ts=SESSIONS.filter(function(x){return x.id===tp.ref;})[0];
@@ -494,7 +624,7 @@ function viewSemaine(){
        '<div class="ecap">Brûlé = métabolisme de base (Mifflin si taille/âge renseignés dans Progrès) + pas + sport. Consommé = repas cochés dans Nutrition. Pour perdre du poids, vise le déficit (vert).</div></div>';
   }
   h+='<div class="weeklist"><div class="wlabel">La semaine</div>';
-  WEEK.forEach(function(w){
+  getPlan().forEach(function(w){
     var s=(w.kind==="force")?SESSIONS.filter(function(x){return x.id===w.ref;})[0]:null;
     var now=(w.idx===dow), clickable=(w.kind==="force");
     h+='<div class="wrow'+(now?" now":"")+(clickable?" clickable":"")+'"'+(clickable?' data-go="'+w.ref+'"':'')+'>'+
@@ -506,6 +636,7 @@ function viewSemaine(){
        (clickable?'<span class="wgo">›</span>':'')+'</div>';
   });
   h+='</div>';
+  h+='<div style="padding:0 20px"><button class="cfgbtn" id="cfgopen">⚙ Configurer mon programme</button></div>';
   return h;
 }
 function wireSemaine(){
@@ -524,13 +655,67 @@ function wireSemaine(){
     if(isNaN(v)||v<0){ flash("Nombre de pas invalide"); return; }
     setSteps(v); renderMain(); flash("Pas enregistrés");
   };
+  var cfg=document.getElementById("cfgopen");
+  if(cfg) cfg.onclick=function(){ state.mode="settings"; renderMain(); renderNav(); window.scrollTo(0,0); };
+}
+
+/* ---- Réglages / programme ---- */
+function viewSettings(){
+  var s=getModeSettings();
+  var h='<div class="cfg"><button class="cfgback" id="cfgback">← Retour</button>'+
+        '<div class="cfgtitle">Configurer mon programme</div>'+
+        '<div class="cfgcap">Choisis tes types d\'entraînement et leur fréquence par semaine. Le krav maga est fixé au mercredi et dimanche.</div>';
+  ["cali","salle","maison"].forEach(function(m){
+    h+='<div class="cfgrow"><div class="cfgname">'+MODES[m].label+'</div><div class="freqseg">';
+    [0,1,2,3].forEach(function(n){ h+='<button class="freqbtn'+((s[m]||0)===n?" on":"")+'" data-mode="'+m+'" data-freq="'+n+'">'+n+'</button>'; });
+    h+='</div></div>';
+  });
+  h+='<div class="cfgrow"><div class="cfgname">Krav maga<div class="cfgsub">mer. & dim. · fixes</div></div>'+
+     '<button class="kravtgl'+(s.krav?" on":"")+'" id="kravtgl">'+(s.krav?"Activé":"Désactivé")+'</button></div>';
+  var total=(s.cali||0)+(s.salle||0)+(s.maison||0), maxS=s.krav?4:6;
+  if(total>maxS) h+='<div class="cfgwarn">Trop de séances : maximum '+maxS+' pour garder au moins un jour de repos.</div>';
+  h+='<button class="cfggen" id="cfggen"'+((total===0||total>maxS)?" disabled":"")+'>Générer le planning</button>';
+  h+='<div class="cfgcap" style="margin:16px 0 10px">Aperçu — tape un jour pour l\'ajuster à la main (⟳) :</div>';
+  getPlan().forEach(function(w){
+    var se=(w.kind==="force")?sessById(w.ref):null;
+    var col=w.kind==="force"?(se?se.tag:"#8B5CF6"):(w.kind==="combat"?"#8B5CF6":"var(--border)");
+    var lab=w.kind==="repos"?"Repos":(w.kind==="combat"?"Krav maga":w.label);
+    h+='<div class="cfgday" data-day="'+w.idx+'"><div class="cfgdd">'+w.day+'</div>'+
+       '<span class="wdot" style="background:'+col+'"></span>'+
+       '<div class="cfgda">'+lab+'</div><span class="wgo">⟳</span></div>';
+  });
+  h+='</div>';
+  return h;
+}
+function cycleDay(idx){
+  var s=getModeSettings(), opts=[{kind:"repos"}];
+  ["cali","salle","maison"].forEach(function(m){ if((s[m]||0)>0){ MODES[m].sessions.forEach(function(sid){ opts.push({kind:"force", ref:sid}); }); } });
+  opts.push({kind:"combat"});
+  var plan=JSON.parse(JSON.stringify(getPlan())), cur=plan.filter(function(p){return p.idx===idx;})[0], ci=0;
+  for(var i=0;i<opts.length;i++){ if(opts[i].kind===cur.kind && (opts[i].kind!=="force" || opts[i].ref===cur.ref)){ ci=i; break; } }
+  var nx=opts[(ci+1)%opts.length];
+  if(nx.kind==="repos"){ cur.kind="repos"; delete cur.ref; delete cur.label; delete cur.mob; }
+  else if(nx.kind==="combat"){ cur.kind="combat"; cur.label="Krav maga"; cur.mob="m3"; delete cur.ref; }
+  else { var se=sessById(nx.ref); cur.kind="force"; cur.ref=nx.ref; cur.label=se?se.title:nx.ref; cur.mob=(se&&se.mob)?se.mob:"m2"; }
+  setPlan(plan); renderMain();
+}
+function wireSettings(){
+  var back=document.getElementById("cfgback"); if(back) back.onclick=function(){ state.mode="semaine"; renderMain(); renderNav(); window.scrollTo(0,0); };
+  Array.prototype.forEach.call(document.querySelectorAll("#main .freqbtn"), function(b){
+    b.onclick=function(){ var st=getModeSettings(); st[b.getAttribute("data-mode")]=parseInt(b.getAttribute("data-freq"),10); setModeSettings(st); renderMain(); };
+  });
+  var kt=document.getElementById("kravtgl"); if(kt) kt.onclick=function(){ var st=getModeSettings(); st.krav=!st.krav; setModeSettings(st); renderMain(); };
+  var gen=document.getElementById("cfggen"); if(gen) gen.onclick=function(){ setPlan(generatePlan(getModeSettings())); flash("Planning généré"); state.mode="semaine"; renderMain(); renderNav(); window.scrollTo(0,0); };
+  Array.prototype.forEach.call(document.querySelectorAll("#main .cfgday"), function(d){ d.onclick=function(){ cycleDay(parseInt(d.getAttribute("data-day"),10)); }; });
 }
 
 /* ---- Force ---- */
 function viewForce(){
-  var sess=SESSIONS.filter(function(x){return x.id===state.active;})[0];
+  var pss=planSessions();
+  if(!pss.some(function(x){return x.id===state.active;})) state.active=pss[0].id;
+  var sess=sessById(state.active);
   var h='<div class="tabs">';
-  SESSIONS.forEach(function(s){
+  pss.forEach(function(s){
     var on=(state.active===s.id);
     h+='<button class="tab" data-sess="'+s.id+'"'+(on?' style="background:'+s.tag+'22;box-shadow:inset 0 0 0 1px '+s.tag+'"':'')+'>'+
        '<div class="num mono">'+s.n+'</div><div class="ti"><span class="dot" style="background:'+s.tag+'"></span>'+s.title+'</div></button>';
@@ -829,7 +1014,7 @@ function todayTrainingUnits(){
   var t=new Date(); t.setHours(0,0,0,0); var f=0,c=0;
   log.forEach(function(e){ if(new Date(e.date)>=t){ if(e.type==="strength"||(!e.type&&e.entries)) f++; else if(e.type==="combat") c++; } });
   var actual=f+c;
-  var tp=WEEK.filter(function(w){return w.idx===new Date().getDay();})[0];
+  var tp=getPlan().filter(function(w){return w.idx===new Date().getDay();})[0];
   var planned=(tp.kind==="force"||tp.kind==="combat");
   return { units: actual>0?actual:(planned?1:0), actual:actual, planned:planned };
 }
