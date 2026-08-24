@@ -832,7 +832,7 @@ function finishForce(){
   if(Object.keys(entries).length===0) return;
   log.push({type:"strength", date:new Date().toISOString(), sessionId:state.active, entries:entries});
   clearWip(state.active);
-  saveLog(); renderHeader(); renderMain(); flash("Séance enregistrée");
+  saveLog(); renderHeader(); state.mode="semaine"; renderMain(); renderNav(); window.scrollTo(0,0); flash("Séance enregistrée");
 }
 
 /* ---- Mobilité ---- */
@@ -894,7 +894,7 @@ function finishStretch(){
   var c=stretchDoneCount(); if(c===0) return;
   var r=STRETCH.filter(function(x){return x.id===state.routine;})[0];
   log.push({type:"stretch", date:new Date().toISOString(), routineId:state.routine, done:c, total:r.items.length});
-  saveLog(); renderMain(); flash("Mobilité enregistrée");
+  saveLog(); state.mode="semaine"; renderMain(); renderNav(); window.scrollTo(0,0); flash("Mobilité enregistrée");
 }
 
 /* ---- Progrès (courbes) ---- */
