@@ -7,8 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ATS">
-<title>Journal ATS</title>
+<meta name="apple-mobile-web-app-title" content="Atlas">
+<title>Atlas</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2308080F'/%3E%3Ctext x='32' y='44' font-family='Arial' font-size='30' font-weight='700' fill='%238B5CF6' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
@@ -561,7 +561,7 @@ function renderHeader(){
   var wk=weekNumber(), deload=(((wk-1)%6)+1===6);
   var count=log.filter(function(e){return e.type==="strength"||(!e.type&&e.entries);}).length;
   document.getElementById("hdr").innerHTML =
-    '<div class="mark"><b>ATS</b><span>Journal de force</span></div>'+
+    '<div class="mark"><b>Atlas</b><span>Ton compagnon forme</span></div>'+
     '<div class="meta"><div class="wk mono">Semaine ~'+wk+'</div><div class="mono">'+count+' séances</div>'+
     (deload?'<div class="chip-deload">DELOAD CONSEILLÉ</div>':'')+'</div>';
 }
@@ -1211,7 +1211,7 @@ function doExport(){
   var blob=new Blob([data], {type:"application/json"});
   var url=URL.createObjectURL(blob);
   var a=document.createElement("a");
-  a.href=url; a.download="ats-"+new Date().toISOString().slice(0,10)+".json";
+  a.href=url; a.download="atlas-"+new Date().toISOString().slice(0,10)+".json";
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
   setLastExport(); renderMain();
