@@ -35,9 +35,14 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
   color:var(--amber); border:1px solid var(--amber); border-radius:4px; padding:1px 6px;}
 .modeseg{display:grid; grid-template-columns:repeat(3,1fr); gap:6px; padding:0 20px 14px;}
 .modeseg button{background:var(--panel); border:1px solid var(--border); color:var(--muted);
-  border-radius:10px; padding:10px 4px; font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s;}
+  border-radius:10px; padding:10px 3px; font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:600; cursor:pointer; transition:all .15s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .modeseg button.on{color:#fff; background:var(--amber); border-color:var(--amber);}
 .tabs{display:flex; gap:8px; padding:0 20px 16px;}
+.fmoderow{display:flex; align-items:center; gap:10px; padding:0 20px 12px;}
+.fmodelbl{font-size:11px; font-weight:700; letter-spacing:1px; color:var(--muted); text-transform:uppercase; flex:none;}
+.fmodewrap{flex:1; position:relative;}
+.fmodesel{width:100%; -webkit-appearance:none; appearance:none; background:var(--panel2); border:1px solid var(--border); color:var(--chalk); border-radius:10px; padding:11px 34px 11px 12px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; cursor:pointer;}
+.fmodewrap:after{content:"▾"; position:absolute; right:13px; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none; font-size:12px;}
 .tab{flex:1; background:var(--panel); border:1px solid var(--border); border-radius:12px;
   padding:12px 10px; cursor:pointer; text-align:left; color:var(--chalk); transition:border-color .15s, transform .08s;}
 .tab:active{transform:scale(.98);}
@@ -519,7 +524,8 @@ function rawSet(k,v){ try { localStorage.setItem(k,v); } catch(e){ memFallback[k
 var log = (function(){ try { var v=rawGet(LOG_KEY); return v? JSON.parse(v):[]; } catch(e){ return []; } })();
 function saveLog(){ rawSet(LOG_KEY, JSON.stringify(log)); }
 
-var state = { mode:"semaine", active:"s1", routine:"m1", progEx:null };
+var state = { mode:"semaine", active:"s1", routine:"m1", progEx:null, forceMode:"cali" };
+function modeOf(sid){ for(var k in MODES){ if(MODES[k].sessions.indexOf(sid)>=0) return k; } return "cali"; }
 var timer = null, timerIv = null, audioCtx = null;
 
 /* ---------- audio + vibration ---------- */
@@ -580,7 +586,7 @@ function renderHeader(){
 }
 function renderNav(){
   var m=state.mode;
-  var defs=[["semaine","Accueil"],["force","Force"],["mobilite","Mobilité"],["nutrition","Nutrition"],["prog","Progrès"],["hist","Histo."]];
+  var defs=[["semaine","Accueil"],["force","Entraînement"],["mobilite","Mobilité"],["nutrition","Nutrition"],["prog","Progrès"],["hist","Histo."]];
   document.getElementById("nav").innerHTML = defs.map(function(d){
     return '<button data-mode="'+d[0]+'" class="'+(m===d[0]?"on":"")+'">'+d[1]+'</button>';
   }).join("");
@@ -679,7 +685,7 @@ function viewSemaine(){
 }
 function wireSemaine(){
   Array.prototype.forEach.call(document.querySelectorAll("[data-go]"), function(el){
-    el.onclick=function(){ state.active=el.getAttribute("data-go"); state.mode="force"; renderMain(); renderNav(); window.scrollTo(0,0); };
+    el.onclick=function(){ var ref=el.getAttribute("data-go"); state.active=ref; state.forceMode=modeOf(ref); state.mode="force"; renderMain(); renderNav(); window.scrollTo(0,0); };
   });
   Array.prototype.forEach.call(document.querySelectorAll("[data-mob]"), function(el){
     el.onclick=function(){ state.routine=el.getAttribute("data-mob"); state.mode="mobilite"; renderMain(); renderNav(); window.scrollTo(0,0); };
@@ -749,15 +755,17 @@ function wireSettings(){
 
 /* ---- Force ---- */
 function viewForce(){
-  var pss=planSessions();
-  if(!pss.some(function(x){return x.id===state.active;})) state.active=pss[0].id;
+  var fm=state.forceMode||"cali";
+  var msess=MODES[fm].sessions.map(sessById).filter(Boolean);
+  if(!msess.some(function(x){return x.id===state.active;})) state.active=msess[0].id;
   var sess=sessById(state.active);
   var wip=getWip(state.active);
-  var h='<div class="tabs">';
-  pss.forEach(function(s){
-    var on=(state.active===s.id);
+  var h='<div class="fmoderow"><span class="fmodelbl">Programme</span><div class="fmodewrap"><select class="fmodesel" id="fmodesel">'+["cali","salle","maison"].map(function(k){return '<option value="'+k+'"'+(k===fm?" selected":"")+'>'+MODES[k].label+'</option>';}).join("")+'</select></div></div>';
+  h+='<div class="tabs">';
+  msess.forEach(function(s){
+    var on=(state.active===s.id), tt=s.title.replace(/^(Salle|Maison) · /,"");
     h+='<button class="tab" data-sess="'+s.id+'"'+(on?' style="background:'+s.tag+'22;box-shadow:inset 0 0 0 1px '+s.tag+'"':'')+'>'+
-       '<div class="num mono">'+s.n+'</div><div class="ti"><span class="dot" style="background:'+s.tag+'"></span>'+s.title+'</div></button>';
+       '<div class="num mono">'+s.n+'</div><div class="ti"><span class="dot" style="background:'+s.tag+'"></span>'+tt+'</div></button>';
   });
   h+='</div><div class="sub">'+sess.long+'</div>';
   sess.blocks.forEach(function(b){
@@ -793,6 +801,8 @@ function viewForce(){
   return h;
 }
 function wireForce(){
+  var fms=document.getElementById("fmodesel");
+  if(fms) fms.onchange=function(){ var k=fms.value; state.forceMode=k; state.active=MODES[k].sessions[0]; renderMain(); };
   Array.prototype.forEach.call(document.querySelectorAll("[data-sess]"), function(b){
     b.onclick=function(){ state.active=b.getAttribute("data-sess"); renderMain(); };
   });
