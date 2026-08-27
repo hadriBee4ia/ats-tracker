@@ -243,7 +243,9 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .mkcal{font-size:11px; color:var(--muted); font-weight:500;}
 .mnote{font-size:11px; color:var(--amber); margin-top:2px; font-weight:500;}
 .mealcard{background:var(--panel); border:1px solid var(--border); border-radius:12px; margin-bottom:8px; overflow:hidden;}
-.mealhdr{display:flex; align-items:center; gap:11px; padding:12px 13px; cursor:pointer;}
+.mealhdr{display:flex; align-items:flex-start; gap:11px; padding:12px 13px; cursor:pointer;}
+.mnote{font-size:11px; color:var(--amber); margin-top:2px; font-weight:500;}
+.mpreview{font-size:11px; color:var(--muted); margin-top:3px; line-height:1.45;}
 .mealhdr:active{background:var(--panel2);}
 .mall{flex:none; border:1px solid var(--border); background:var(--panel2); color:var(--muted); border-radius:7px; font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:700; padding:6px 9px; cursor:pointer;}
 .mall.on{background:var(--green); border-color:var(--green); color:var(--ink);}
@@ -1184,7 +1186,7 @@ function viewNutrition(){
     var allOn=foods.every(function(x){return x.on;}), mck=foods.reduce(function(s,x){return s+(x.on?x.kcal:0);},0), open=!!mealOpen[m.n];
     h+='<div class="mealcard">'+
        '<div class="mealhdr" data-open="'+esc(m.n)+'"><div class="mtime mono">'+m.t+'</div>'+
-       '<div class="mmid"><div class="mname">'+m.n+' <span class="mkcal mono">'+mck+' / '+mc+' kcal</span></div>'+(m.note?'<div class="mnote">'+m.note+'</div>':'')+'</div>'+
+       '<div class="mmid"><div class="mname">'+m.n+' <span class="mkcal mono">'+mck+' / '+mc+' kcal</span></div>'+(m.note?'<div class="mnote">'+m.note+'</div>':'')+(open?'':'<div class="mpreview">'+foods.map(function(x){return x.name;}).join(" · ")+'</div>')+'</div>'+
        '<button class="mall'+(allOn?" on":"")+'" data-all="'+esc(m.n)+'" data-count="'+foods.length+'">'+(allOn?"tout ✓":"tout")+'</button>'+
        '<span class="wgo">'+(open?"▾":"▸")+'</span></div>';
     if(open){
@@ -1347,5 +1349,3 @@ renderHeader(); renderNav(); renderMain();
 </script>
 </body>
 </html>
-index.html
-Affichage de index.html en cours...
