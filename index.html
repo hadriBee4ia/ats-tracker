@@ -58,6 +58,7 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .card .nm{font-size:15px; font-weight:600; line-height:1.3;}
 .card .rx{font-size:12px; color:var(--muted); margin-top:3px;}
 .card .rx b{color:var(--amber); font-weight:600;}
+.restbadge{color:var(--green); font-weight:700;}
 .card .note{font-size:11px; color:var(--muted); font-style:italic; margin-top:2px;}
 .last{font-size:11px; color:var(--muted); margin-top:9px;}
 .last .mono{color:var(--chalk);}
@@ -88,15 +89,15 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
   font-size:15px; font-weight:700; letter-spacing:.3px; color:#fff; background:var(--amber); cursor:pointer; transition:transform .08s, opacity .15s;}
 .save:active{transform:scale(.99);}
 .save.empty{opacity:.4;}
-.timerbar{position:fixed; left:0; right:0; bottom:calc(96px + env(safe-area-inset-bottom)); z-index:45; display:flex; justify-content:center; padding:0 20px; pointer-events:none;}
-.timer{pointer-events:auto; max-width:520px; width:100%; background:var(--panel2); border:1px solid var(--amber);
-  border-radius:14px; padding:12px 12px; display:flex; align-items:center; gap:10px; box-shadow:0 12px 34px rgba(0,0,0,.55); animation:tin .2s ease;}
-@keyframes tin{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
-.timer.done{border-color:var(--green);}
-.timer .tlabel{font-size:11px; color:var(--muted); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-.timer .tclock{font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:700; min-width:58px; text-align:center;}
-.timer.done .tclock{color:var(--green);}
-.tbtn{border:1px solid var(--border); background:var(--panel); color:var(--chalk); border-radius:8px;
+.timerbar{position:fixed; left:0; right:0; top:0; z-index:60; pointer-events:none;}
+.timer{pointer-events:auto; width:100%; background:var(--amber); color:#1a1205; border:none;
+  padding:calc(11px + env(safe-area-inset-top)) 16px 11px; display:flex; align-items:center; gap:11px; box-shadow:0 6px 22px rgba(0,0,0,.45); animation:tin .22s ease;}
+@keyframes tin{from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);}}
+.timer.done{background:var(--green);}
+.timer .tlabel{font-size:12px; font-weight:700; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.timer .tclock{font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:800; min-width:64px; text-align:center;}
+.timer.done .tclock{color:#0a2b1a;}
+.tbtn{border:1px solid rgba(0,0,0,.25); background:rgba(0,0,0,.12); color:#1a1205; border-radius:8px;
   font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; padding:9px 10px; cursor:pointer;}
 .tbtn:active{transform:scale(.94);}
 .tx{width:34px; height:34px; display:flex; align-items:center; justify-content:center; padding:0;}
@@ -154,6 +155,10 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .freqbtn.on{background:var(--amber); border-color:var(--amber); color:#fff;}
 .kravtgl{flex:none; border:1px solid var(--border); background:var(--panel2); color:var(--muted); border-radius:9px; padding:9px 14px; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; cursor:pointer;}
 .kravtgl.on{background:var(--amber); border-color:var(--amber); color:#fff;}
+.kravdays{display:flex; gap:5px; margin:-2px 0 10px;}
+.kdaybtn{flex:1; background:var(--panel2); border:1px solid var(--border); color:var(--muted); border-radius:8px; padding:9px 2px; font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; cursor:pointer;}
+.kdaybtn.on{background:#8B5CF6; border-color:#8B5CF6; color:#fff;}
+.dosbadge{display:inline-block; font-size:10px; font-weight:700; color:var(--green); background:rgba(52,211,153,.12); border:1px solid rgba(52,211,153,.35); border-radius:5px; padding:1px 6px; margin-left:6px; vertical-align:middle;}
 .cfgwarn{font-size:12px; color:var(--amber); background:rgba(255,182,39,.08); border:1px solid rgba(255,182,39,.3); border-radius:8px; padding:9px 11px; margin:4px 0 10px;}
 .cfggen{width:100%; border:none; border-radius:12px; padding:15px; font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; color:#fff; background:var(--amber); cursor:pointer; margin-top:6px;}
 .cfggen:disabled{opacity:.4;}
@@ -324,12 +329,12 @@ var SESSIONS = [
       { id:"s3v2", name:"Rows australiens", sets:3, reps:"10–15", rest:"75 s", restSec:75, note:"tire au sternum" },
       { id:"s3v3", name:"Dips (sans lest)", sets:3, reps:"8–12", rest:"75 s", restSec:75, note:"maintient le push" } ]},
     { label:"Core", items:[
-      { id:"s3c1", name:"Toes-to-bar / L-sit", sets:3, reps:"6–10", rest:"60 s", restSec:60, note:"ou tenue 15–25 s" } ]}
+      { id:"s3c1", name:"Toes-to-bar / L-sit", sets:3, reps:"6–10", rest:"60 s", restSec:60, note:"ou tenue 15–25 s", alt:{ id:"s3c1b", name:"Gainage planche", sets:3, reps:"30–45 s", rest:"60 s", restSec:60, note:"dos neutre, gaine sans creuser" } } ]}
   ]},
   { id:"g1", n:"01", title:"Salle · Pecs/épaules", long:"Salle · pecs, épaules, triceps", tag:"#E879F9", mob:"m1", blocks:[
     { label:"Force", items:[
       { id:"g1f1", name:"Développé couché (barre)", sets:4, reps:"5–8", rest:"2–3 min", restSec:150, note:"omoplates serrées · RIR 1–2", load:true },
-      { id:"g1f2", name:"Développé militaire haltères", sets:4, reps:"6–8", rest:"2 min", restSec:120, note:"gainage, ne cambre pas", load:true } ]},
+      { id:"g1f2", name:"Développé militaire haltères", sets:4, reps:"6–8", rest:"2 min", restSec:120, note:"gainage, ne cambre pas", load:true, alt:{ id:"g1f2b", name:"Développé militaire assis (dossier)", sets:4, reps:"8–10", rest:"2 min", restSec:120, note:"dos calé contre le dossier", load:true } } ]},
     { label:"Volume", items:[
       { id:"g1v1", name:"Développé incliné haltères", sets:3, reps:"8–12", rest:"90 s", restSec:90, note:"haut des pecs", load:true },
       { id:"g1v2", name:"Élévations latérales", sets:3, reps:"12–15", rest:"60 s", restSec:60, note:"coudes légèrement fléchis", load:true },
@@ -339,7 +344,7 @@ var SESSIONS = [
   { id:"g2", n:"02", title:"Salle · Dos/biceps", long:"Salle · dos, biceps", tag:"#A78BFA", mob:"m3", blocks:[
     { label:"Force", items:[
       { id:"g2f1", name:"Tractions ou tirage vertical lesté", sets:4, reps:"6–10", rest:"2 min", restSec:120, note:"tire les coudes vers le bas", load:true },
-      { id:"g2f2", name:"Rowing barre", sets:4, reps:"6–10", rest:"2 min", restSec:120, note:"dos droit, tire au nombril", load:true } ]},
+      { id:"g2f2", name:"Rowing barre", sets:4, reps:"6–10", rest:"2 min", restSec:120, note:"dos droit, tire au nombril", load:true, alt:{ id:"g2f2b", name:"Rowing appui poitrine", sets:4, reps:"8–12", rest:"90 s", restSec:90, note:"buste calé sur le banc, zéro charge lombaire", load:true } } ]},
     { label:"Volume", items:[
       { id:"g2v1", name:"Tirage horizontal poulie", sets:3, reps:"10–12", rest:"90 s", restSec:90, note:"serre les omoplates", load:true },
       { id:"g2v2", name:"Curl biceps haltères", sets:3, reps:"10–12", rest:"60 s", restSec:60, note:"coudes fixes", load:true },
@@ -348,8 +353,8 @@ var SESSIONS = [
   ]},
   { id:"g3", n:"03", title:"Salle · Jambes", long:"Salle · quadris, ischios, fessiers", tag:"#38BDF8", mob:"m2", blocks:[
     { label:"Force", items:[
-      { id:"g3f1", name:"Squat barre", sets:4, reps:"5–8", rest:"2–3 min", restSec:150, note:"cuisses parallèles, dos gainé", load:true },
-      { id:"g3f2", name:"Soulevé de terre roumain", sets:4, reps:"6–8", rest:"2 min", restSec:120, note:"dos droit, étire les ischios", load:true } ]},
+      { id:"g3f1", name:"Squat barre", sets:4, reps:"5–8", rest:"2–3 min", restSec:150, note:"cuisses parallèles, dos gainé", load:true, alt:{ id:"g3f1b", name:"Presse à cuisses (lourde)", sets:4, reps:"8–12", rest:"2–3 min", restSec:150, note:"dos bien calé, sans décoller le bassin", load:true } },
+      { id:"g3f2", name:"Soulevé de terre roumain", sets:4, reps:"6–8", rest:"2 min", restSec:120, note:"dos droit, étire les ischios", load:true, alt:{ id:"g3f2b", name:"Hip thrust à la barre", sets:4, reps:"8–12", rest:"2 min", restSec:120, note:"serre les fessiers, dos neutre", load:true } } ]},
     { label:"Volume", items:[
       { id:"g3v1", name:"Presse à cuisses", sets:3, reps:"10–12", rest:"90 s", restSec:90, note:"amplitude complète", load:true },
       { id:"g3v2", name:"Leg curl (ischios)", sets:3, reps:"12–15", rest:"60 s", restSec:60, note:"contrôle la descente", load:true },
@@ -375,7 +380,7 @@ var SESSIONS = [
   ]},
   { id:"h3", n:"03", title:"Maison · Corps entier", long:"Maison · full body + cardio", tag:"#8B5CF6", mob:"m3", blocks:[
     { label:"Force", items:[
-      { id:"h3f1", name:"Burpees", sets:4, reps:"10–12", rest:"90 s", restSec:90, note:"rythme régulier" },
+      { id:"h3f1", name:"Burpees", sets:4, reps:"10–12", rest:"90 s", restSec:90, note:"rythme régulier", alt:{ id:"h3f1b", name:"Montées de genoux sur place", sets:4, reps:"40–50", rest:"75 s", restSec:75, note:"cardio doux, dos droit, sans à-coups" } },
       { id:"h3f2", name:"Pompes", sets:3, reps:"10–15", rest:"75 s", restSec:75, note:"corps gainé" } ]},
     { label:"Volume", items:[
       { id:"h3v1", name:"Squats sautés", sets:3, reps:"12–15", rest:"75 s", restSec:75, note:"réception souple" },
@@ -425,14 +430,17 @@ var MODES = {
   maison: { label:"Maison",      sessions:["h1","h2","h3"] }
 };
 function sessById(id){ return SESSIONS.filter(function(x){return x.id===id;})[0]; }
-function getModeSettings(){ try{ var v=rawGet("ats:modes"); if(v) return JSON.parse(v); }catch(e){} return {cali:3, salle:0, maison:0, krav:true}; }
+function getModeSettings(){ try{ var v=rawGet("ats:modes"); if(v){ var s=JSON.parse(v); if(!s.kravDays) s.kravDays=[3,0]; return s; } }catch(e){} return {cali:3, salle:0, maison:0, krav:true, kravDays:[3,0]}; }
 function setModeSettings(s){ rawSet("ats:modes", JSON.stringify(s)); }
+function getBackCare(){ return rawGet("ats:backcare")==="1"; }
+function setBackCare(v){ rawSet("ats:backcare", v?"1":"0"); }
 function getPlan(){ try{ var v=rawGet("ats:plan"); if(v){ var p=JSON.parse(v); if(p&&p.length===7) return p; } }catch(e){} return DEFAULT_PLAN; }
 function setPlan(p){ rawSet("ats:plan", JSON.stringify(p)); }
 function generatePlan(s){
   var DAYS=[{day:"Lundi",idx:1},{day:"Mardi",idx:2},{day:"Mercredi",idx:3},{day:"Jeudi",idx:4},{day:"Vendredi",idx:5},{day:"Samedi",idx:6},{day:"Dimanche",idx:0}];
   var plan=DAYS.map(function(d){ return {day:d.day, idx:d.idx, kind:"repos"}; });
-  if(s.krav){ plan.forEach(function(p){ if(p.idx===3||p.idx===0){ p.kind="combat"; p.label="Krav maga"; p.mob="m3"; } }); }
+  var kd=s.kravDays||[3,0];
+  if(s.krav){ plan.forEach(function(p){ if(kd.indexOf(p.idx)>=0){ p.kind="combat"; p.label="Krav maga"; p.mob="m3"; } }); }
   var insts=[];
   ["cali","salle","maison"].forEach(function(m){ var n=s[m]||0; for(var i=0;i<n;i++) insts.push({mode:m, k:i}); });
   var order=[1,4,6,2,5,3,0];
@@ -526,11 +534,13 @@ function saveLog(){ rawSet(LOG_KEY, JSON.stringify(log)); }
 
 var state = { mode:"semaine", active:"s1", routine:"m1", progEx:null, forceMode:"cali" };
 function modeOf(sid){ for(var k in MODES){ if(MODES[k].sessions.indexOf(sid)>=0) return k; } return "cali"; }
-var timer = null, timerIv = null, audioCtx = null;
+var timer = null, timerIv = null, audioCtx = null, speechPrimed = false;
 
 /* ---------- audio + vibration ---------- */
 function ensureAudio(){ try{ audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==="suspended") audioCtx.resume(); }catch(e){} }
-function beep(){ try{ ensureAudio(); var t=audioCtx.currentTime; [[784,0],[988,0.22],[1319,0.44],[1319,0.7]].forEach(function(n){ var o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.type="sine"; o.frequency.value=n[0]; var s=t+n[1]; g.gain.setValueAtTime(0.0001,s); g.gain.exponentialRampToValueAtTime(0.45,s+0.02); g.gain.exponentialRampToValueAtTime(0.0001,s+0.55); o.start(s); o.stop(s+0.55); }); }catch(e){} }
+function beep(){ try{ ensureAudio(); var t=audioCtx.currentTime; [[988,0,0.14],[988,0.22,0.14],[988,0.44,0.14],[1319,0.66,0.55],[1319,1.28,0.55]].forEach(function(n){ var o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.type="triangle"; o.frequency.value=n[0]; var s=t+n[1]; g.gain.setValueAtTime(0.0001,s); g.gain.exponentialRampToValueAtTime(0.6,s+0.02); g.gain.exponentialRampToValueAtTime(0.0001,s+n[2]); o.start(s); o.stop(s+n[2]); }); }catch(e){} }
+function primeSpeech(){ try{ if(!("speechSynthesis" in window)) return; window.speechSynthesis.getVoices(); if(!speechPrimed){ var u=new SpeechSynthesisUtterance("."); u.volume=0; window.speechSynthesis.speak(u); speechPrimed=true; } window.speechSynthesis.resume(); }catch(e){} }
+function speak(txt){ try{ if(!("speechSynthesis" in window)) return; window.speechSynthesis.resume(); var u=new SpeechSynthesisUtterance(txt); u.lang="fr-FR"; var vs=window.speechSynthesis.getVoices()||[]; for(var i=0;i<vs.length;i++){ if(/^fr/i.test(vs[i].lang)){ u.voice=vs[i]; break; } } u.rate=1; u.pitch=1; u.volume=1; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); }catch(e){} }
 
 /* ---------- helpers ---------- */
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
@@ -714,9 +724,15 @@ function viewSettings(){
     [0,1,2,3].forEach(function(n){ h+='<button class="freqbtn'+((s[m]||0)===n?" on":"")+'" data-mode="'+m+'" data-freq="'+n+'">'+n+'</button>'; });
     h+='</div></div>';
   });
-  h+='<div class="cfgrow"><div class="cfgname">Krav maga<div class="cfgsub">mer. & dim. · fixes</div></div>'+
+  h+='<div class="cfgrow"><div class="cfgname">Krav maga<div class="cfgsub">choisis les jours</div></div>'+
      '<button class="kravtgl'+(s.krav?" on":"")+'" id="kravtgl">'+(s.krav?"Activé":"Désactivé")+'</button></div>';
-  var total=(s.cali||0)+(s.salle||0)+(s.maison||0), maxS=s.krav?4:6;
+  if(s.krav){
+    var KD=[["Lun",1],["Mar",2],["Mer",3],["Jeu",4],["Ven",5],["Sam",6],["Dim",0]];
+    h+='<div class="kravdays">'+KD.map(function(d){ return '<button class="kdaybtn'+((s.kravDays||[]).indexOf(d[1])>=0?" on":"")+'" data-kday="'+d[1]+'">'+d[0]+'</button>'; }).join("")+'</div>';
+  }
+  var total=(s.cali||0)+(s.salle||0)+(s.maison||0), kravN=s.krav?(s.kravDays||[]).length:0, maxS=Math.max(0,6-kravN);
+  h+='<div class="cfgrow"><div class="cfgname">Ménager mon dos<div class="cfgsub">remplace les exercices lourds pour les lombaires</div></div>'+
+     '<button class="kravtgl'+(getBackCare()?" on":"")+'" id="dostgl">'+(getBackCare()?"Activé":"Désactivé")+'</button></div>';
   if(total>maxS) h+='<div class="cfgwarn">Trop de séances : maximum '+maxS+' pour garder au moins un jour de repos.</div>';
   h+='<button class="cfggen" id="cfggen"'+((total===0||total>maxS)?" disabled":"")+'>Générer le planning</button>';
   h+='<div class="cfgcap" style="margin:16px 0 10px">Aperçu — tape un jour pour l\'ajuster à la main (⟳) :</div>';
@@ -749,6 +765,10 @@ function wireSettings(){
     b.onclick=function(){ var st=getModeSettings(); st[b.getAttribute("data-mode")]=parseInt(b.getAttribute("data-freq"),10); setModeSettings(st); renderMain(); };
   });
   var kt=document.getElementById("kravtgl"); if(kt) kt.onclick=function(){ var st=getModeSettings(); st.krav=!st.krav; setModeSettings(st); renderMain(); };
+  var dt=document.getElementById("dostgl"); if(dt) dt.onclick=function(){ setBackCare(!getBackCare()); renderMain(); };
+  Array.prototype.forEach.call(document.querySelectorAll("#main .kdaybtn"), function(b){
+    b.onclick=function(){ var st=getModeSettings(), d=parseInt(b.getAttribute("data-kday"),10); if(!st.kravDays) st.kravDays=[]; var i=st.kravDays.indexOf(d); if(i>=0) st.kravDays.splice(i,1); else st.kravDays.push(d); setModeSettings(st); renderMain(); };
+  });
   var gen=document.getElementById("cfggen"); if(gen) gen.onclick=function(){ setPlan(generatePlan(getModeSettings())); flash("Planning généré"); state.mode="semaine"; renderMain(); renderNav(); window.scrollTo(0,0); };
   Array.prototype.forEach.call(document.querySelectorAll("#main .cfgday"), function(d){ d.onclick=function(){ cycleDay(parseInt(d.getAttribute("data-day"),10)); }; });
 }
@@ -771,9 +791,11 @@ function viewForce(){
   sess.blocks.forEach(function(b){
     h+='<div class="block"><div class="elabel">'+b.label+'</div>';
     b.items.forEach(function(it){
+      var swapped=false;
+      if(getBackCare() && it.alt){ it=it.alt; swapped=true; }
       var prev=lastEntry(state.active, it.id);
-      h+='<div class="card"><div class="nm">'+it.name+'</div>'+
-         '<div class="rx"><b class="mono">'+it.sets+' × '+it.reps+'</b> · repos '+it.rest+'</div>'+
+      h+='<div class="card"><div class="nm">'+it.name+(swapped?' <span class="dosbadge">dos ménagé</span>':'')+'</div>'+
+         '<div class="rx"><b class="mono">'+it.sets+' × '+it.reps+'</b> · repos '+it.rest+' <span class="restbadge" id="rest-'+it.id+'"></span></div>'+
          (it.note?'<div class="note">'+it.note+'</div>':'');
       var ht=HOWTO[it.id];
       if(ht){ h+='<button class="howbtn" data-how="'+it.id+'">Comment faire ›</button>'+
@@ -791,7 +813,7 @@ function viewForce(){
            '<input class="inp f-reps" inputmode="numeric" placeholder="'+esc(it.reps)+'" value="'+esc(pv.reps||"")+'">'+
            '<span class="mult">×</span>'+
            '<input class="inp f-load" inputmode="numeric" placeholder="'+(it.load?"kg":"—")+'" value="'+esc(pv.load||"")+'">'+
-           '<button class="check'+(pv.done?" on":"")+'" data-rest="'+it.restSec+'" data-name="'+esc(it.name)+'" aria-label="Valider la série">'+CHECK_SVG+'</button></div>';
+           '<button class="check'+(pv.done?" on":"")+'" data-rest="'+it.restSec+'" data-name="'+esc(it.name)+'" data-sid="'+it.id+'" aria-label="Valider la série">'+CHECK_SVG+'</button></div>';
       }
       h+='</div></div>';
     });
@@ -812,7 +834,7 @@ function wireForce(){
       var nowDone=!row.classList.contains("done");
       row.classList.toggle("done"); btn.classList.toggle("on");
       refreshFinishForce(); saveWip();
-      if(nowDone){ startTimer(parseInt(btn.getAttribute("data-rest"),10), "Repos · "+btn.getAttribute("data-name")); }
+      if(nowDone){ startTimer(parseInt(btn.getAttribute("data-rest"),10), "Repos · "+btn.getAttribute("data-name"), btn.getAttribute("data-sid")); }
     };
   });
   Array.prototype.forEach.call(document.querySelectorAll("#main .howbtn"), function(btn){
@@ -1322,9 +1344,10 @@ function renderTimer(){
   var a=document.getElementById("tAdd"); if(a) a.onclick=function(){ timer.left+=15; timer.total+=15; timer.done=false; timer.running=true; ensureInterval(); renderTimer(); };
   var p=document.getElementById("tPause"); if(p) p.onclick=function(){ timer.running=!timer.running; ensureInterval(); renderTimer(); };
   var c=document.getElementById("tClose"); if(c) c.onclick=function(){ clearTimer(); };
-  if(timer.sid){ var pb=document.getElementById("play-"+timer.sid); if(pb){ pb.classList.add("running"); pb.textContent=timer.done?"✓ terminé":("⏱ "+fmtClock(timer.left)); } }
+  if(timer.sid){ var pb=document.getElementById("play-"+timer.sid); if(pb){ pb.classList.add("running"); pb.textContent=timer.done?"✓ terminé":("⏱ "+fmtClock(timer.left)); }
+    var rb=document.getElementById("rest-"+timer.sid); if(rb){ rb.className="restbadge on"; rb.textContent=timer.done?"· repos terminé ✓":("· repos "+fmtClock(timer.left)); } }
 }
-function restorePlay(sid, total){ if(!sid) return; var b=document.getElementById("play-"+sid); if(b){ b.textContent="▶ Démarrer "+total+"s"; b.classList.remove("running"); } }
+function restorePlay(sid, total){ if(!sid) return; var b=document.getElementById("play-"+sid); if(b){ b.textContent="▶ Démarrer "+total+"s"; b.classList.remove("running"); } var rb=document.getElementById("rest-"+sid); if(rb){ rb.className="restbadge"; rb.textContent=""; } }
 function ensureInterval(){
   if(timerIv){ clearInterval(timerIv); timerIv=null; }
   if(timer && timer.running){
@@ -1333,7 +1356,7 @@ function ensureInterval(){
       if(timer.left<=1){
         timer.left=0; timer.running=false; timer.done=true;
         clearInterval(timerIv); timerIv=null;
-        beep(); if(navigator.vibrate) navigator.vibrate([200,100,200,100,300]);
+        beep(); speak("Reprise"); if(navigator.vibrate) navigator.vibrate([300,120,300,120,400]);
         renderTimer();
         setTimeout(function(){ if(timer && timer.done) clearTimer(); }, 5000);
         return;
@@ -1342,7 +1365,7 @@ function ensureInterval(){
     }, 1000);
   }
 }
-function startTimer(sec, label, sid){ ensureAudio(); if(timer&&timer.sid&&timer.sid!==sid) restorePlay(timer.sid, timer.total); timer={left:sec, total:sec, running:true, done:false, label:label, sid:sid||null}; ensureInterval(); renderTimer(); }
+function startTimer(sec, label, sid){ ensureAudio(); primeSpeech(); if(timer&&timer.sid&&timer.sid!==sid) restorePlay(timer.sid, timer.total); timer={left:sec, total:sec, running:true, done:false, label:label, sid:sid||null}; ensureInterval(); renderTimer(); }
 function clearTimer(){ if(timerIv){ clearInterval(timerIv); timerIv=null; } var s=timer&&timer.sid, t=timer&&timer.total; timer=null; renderTimer(); restorePlay(s,t); }
 
 /* ---------- toast ---------- */
