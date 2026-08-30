@@ -1133,49 +1133,49 @@ function setGoal(g){ if(GOALS[g]) rawSet("ats:goal", g); }
 var MEAL_PLANS = {
   train: [
     {t:"8:00", n:"Petit-déjeuner", f:0.25, foods:[
-      {name:"Isolat", macro:"p", dens:80, ks:0.30, ps:0.55},
-      {name:"Flocons d'avoine", macro:"c", dens:60, ks:0.45, ps:0.20},
-      {name:"2 œufs", ks:0.15, ps:0.20},
-      {name:"Fruits", ks:0.10, ps:0.05} ]},
+      {name:"Isolat", macro:"p", dens:85, kc:380, ps:0.6},
+      {name:"Flocons d'avoine", macro:"c", dens:60, kc:370, pp:13},
+      {name:"2 œufs", g:100, kcal:156, prot:13},
+      {name:"Fruits", g:150, kcal:90, prot:1} ]},
     {t:"12:30", n:"Déjeuner", f:0.30, foods:[
-      {name:"Poulet ou poisson", macro:"p", dens:28, ks:0.42, ps:0.85},
-      {name:"Riz cuit", macro:"c", dens:28, ks:0.38, ps:0.08},
-      {name:"Légumes 150 g", ks:0.08, ps:0.05},
-      {name:"Huile d'olive (1 c.à.s.)", ks:0.12, ps:0.02} ]},
+      {name:"Poulet ou poisson", macro:"p", dens:28, kc:150, ps:0.9},
+      {name:"Riz cuit", macro:"c", dens:28, kc:130, pp:2.7},
+      {name:"Légumes", g:150, kcal:45, prot:3},
+      {name:"Huile d'olive (1 c.à.s.)", g:10, kcal:90, prot:0} ]},
     {t:"16:00", n:"Collation", f:0.10, foods:[
-      {name:"Skyr", macro:"p", dens:10, ks:0.55, ps:0.80},
-      {name:"Amandes (poignée)", ks:0.30, ps:0.12},
-      {name:"1 fruit", ks:0.15, ps:0.08} ]},
+      {name:"Skyr", macro:"p", dens:10, kc:63, ps:0.9},
+      {name:"Amandes", g:25, kcal:150, prot:5},
+      {name:"1 fruit", g:150, kcal:80, prot:1} ]},
     {t:"~1 h avant", n:"Pré-séance", f:0.10, note:"~1 h avant · glucides pour l'effort", foods:[
-      {name:"Banane", macro:"c", dens:23, ks:0.55, ps:0.15},
-      {name:"Isolat", macro:"p", dens:80, ks:0.45, ps:0.85} ]},
+      {name:"Banane", macro:"c", dens:20, kc:89, pp:1.1},
+      {name:"Isolat", macro:"p", dens:85, kc:380, ps:1} ]},
     {t:"après", n:"Post-séance", f:0.10, note:"juste après · puis un repas complet dans l'heure", foods:[
-      {name:"Isolat", macro:"p", dens:80, ks:0.70, ps:0.90},
-      {name:"1 fruit", ks:0.30, ps:0.10} ]},
+      {name:"Isolat", macro:"p", dens:85, kc:380, ps:1},
+      {name:"1 fruit", g:150, kcal:80, prot:1} ]},
     {t:"20:30", n:"Dîner", f:0.15, foods:[
-      {name:"Poisson ou bœuf maigre", macro:"p", dens:26, ks:0.45, ps:0.85},
-      {name:"Patate douce", macro:"c", dens:20, ks:0.40, ps:0.08},
-      {name:"Légumes 150 g", ks:0.15, ps:0.07} ]}
+      {name:"Poisson ou bœuf maigre", macro:"p", dens:26, kc:180, ps:0.9},
+      {name:"Patate douce", macro:"c", dens:20, kc:90, pp:2},
+      {name:"Légumes", g:150, kcal:45, prot:3} ]}
   ],
   rest: [
     {t:"8:30", n:"Petit-déjeuner", f:0.30, foods:[
-      {name:"Isolat", macro:"p", dens:80, ks:0.30, ps:0.55},
-      {name:"Flocons ou pain complet", macro:"c", dens:55, ks:0.45, ps:0.20},
-      {name:"2 œufs", ks:0.15, ps:0.20},
-      {name:"Fruits", ks:0.10, ps:0.05} ]},
+      {name:"Isolat", macro:"p", dens:85, kc:380, ps:0.6},
+      {name:"Flocons ou pain complet", macro:"c", dens:55, kc:350, pp:11},
+      {name:"2 œufs", g:100, kcal:156, prot:13},
+      {name:"Fruits", g:150, kcal:90, prot:1} ]},
     {t:"13:00", n:"Déjeuner", f:0.35, foods:[
-      {name:"Poulet ou poisson", macro:"p", dens:28, ks:0.42, ps:0.85},
-      {name:"Riz cuit", macro:"c", dens:28, ks:0.40, ps:0.08},
-      {name:"Légumes 150 g", ks:0.10, ps:0.05},
-      {name:"Huile d'olive", ks:0.08, ps:0.02} ]},
+      {name:"Poulet ou poisson", macro:"p", dens:28, kc:150, ps:0.9},
+      {name:"Riz cuit", macro:"c", dens:28, kc:130, pp:2.7},
+      {name:"Légumes", g:150, kcal:45, prot:3},
+      {name:"Huile d'olive", g:10, kcal:90, prot:0} ]},
     {t:"16:30", n:"Collation", f:0.15, foods:[
-      {name:"Fromage blanc", macro:"p", dens:10, ks:0.55, ps:0.80},
-      {name:"Amandes (poignée)", ks:0.30, ps:0.12},
-      {name:"1 fruit", ks:0.15, ps:0.08} ]},
+      {name:"Fromage blanc", macro:"p", dens:8, kc:72, ps:0.9},
+      {name:"Amandes", g:25, kcal:150, prot:5},
+      {name:"1 fruit", g:150, kcal:80, prot:1} ]},
     {t:"20:00", n:"Dîner", f:0.20, foods:[
-      {name:"Poisson, tofu ou bœuf maigre", macro:"p", dens:26, ks:0.45, ps:0.85},
-      {name:"Patate douce ou légumineuses", macro:"c", dens:20, ks:0.40, ps:0.08},
-      {name:"Légumes 150 g", ks:0.15, ps:0.07} ]}
+      {name:"Poisson, tofu ou bœuf maigre", macro:"p", dens:26, kc:175, ps:0.9},
+      {name:"Patate douce ou légumineuses", macro:"c", dens:20, kc:100, pp:4},
+      {name:"Légumes", g:150, kcal:45, prot:3} ]}
   ]
 };
 function dailyTargets(kg){
@@ -1192,7 +1192,13 @@ function sportBurn(kg){
 }
 function consumedToday(kg){
   var T=dailyTargets(kg), plan=(T.units>0?MEAL_PLANS.train:MEAL_PLANS.rest), checked=dayFoods(), c=0;
-  plan.forEach(function(m){ var mc=Math.round(T.kcal*m.f); m.foods.forEach(function(fd,i){ if(checked.indexOf(m.n+"#"+i)>=0) c+=Math.round(mc*fd.ks); }); });
+  plan.forEach(function(m){ var mp=Math.round(T.prot*m.f), mCarb=Math.round(T.carbs*m.f);
+    m.foods.forEach(function(fd,i){ if(checked.indexOf(m.n+"#"+i)<0) return;
+      if(fd.macro==="p"){ var g=Math.round((mp*(fd.ps||1))/fd.dens*100/5)*5; c+=Math.round(g*fd.kc/100); }
+      else if(fd.macro==="c"){ var g2=Math.round(mCarb/fd.dens*100/5)*5; c+=Math.round(g2*fd.kc/100); }
+      else { c+=fd.kcal||0; }
+    });
+  });
   return c;
 }
 function getProfile(){ var h=parseFloat(rawGet("ats:height")), a=parseInt(rawGet("ats:age"),10), s=rawGet("ats:sex"); return { h:isNaN(h)?null:h, age:isNaN(a)?null:a, sex:(s==="f"?"f":"m") }; }
@@ -1232,19 +1238,21 @@ function viewNutrition(){
   h+='<div class="nlabel">'+(training?"Répartition du jour d'entraînement":"Répartition — jour de repos")+' · déplie un repas et coche ce que tu manges</div>';
   var cKcal=0, cP=0;
   plan.forEach(function(m){
-    var mc=Math.round(kcal*m.f), mp=Math.round(prot*m.f), mCarb=Math.round(carbs*m.f);
+    var mp=Math.round(prot*m.f), mCarb=Math.round(carbs*m.f);
     var foods=m.foods.map(function(fd,i){
-      var fk=Math.round(mc*fd.ks), fp=Math.round(mp*fd.ps), grams="";
-      if(fd.macro==="p"){ grams=" "+Math.round((mp*fd.ps)/fd.dens*100/5)*5+" g"; }
-      else if(fd.macro==="c"){ grams=" "+Math.round(mCarb/fd.dens*100/5)*5+" g"; }
+      var g=0, fk=0, fp=0, grams="";
+      if(fd.macro==="p"){ g=Math.round((mp*(fd.ps||1))/fd.dens*100/5)*5; fk=Math.round(g*fd.kc/100); fp=Math.round(g*fd.dens/100); grams=" "+g+" g"; }
+      else if(fd.macro==="c"){ g=Math.round(mCarb/fd.dens*100/5)*5; fk=Math.round(g*fd.kc/100); fp=Math.round(g*(fd.pp||0)/100); grams=" "+g+" g"; }
+      else { fk=fd.kcal||0; fp=fd.prot||0; grams=fd.g?(" "+fd.g+" g"):""; }
       var key=m.n+"#"+i, on=checked.indexOf(key)>=0;
       if(on){ cKcal+=fk; cP+=fp; }
       return {name:fd.name+grams, kcal:fk, key:key, on:on};
     });
+    var mtot=foods.reduce(function(s,x){return s+x.kcal;},0);
     var allOn=foods.every(function(x){return x.on;}), mck=foods.reduce(function(s,x){return s+(x.on?x.kcal:0);},0), open=!!mealOpen[m.n];
     h+='<div class="mealcard">'+
        '<div class="mealhdr" data-open="'+esc(m.n)+'"><div class="mtime mono">'+m.t+'</div>'+
-       '<div class="mmid"><div class="mname">'+m.n+' <span class="mkcal mono">'+mck+' / '+mc+' kcal</span></div>'+(m.note?'<div class="mnote">'+m.note+'</div>':'')+(open?'':'<div class="mpreview">'+foods.map(function(x){return x.name;}).join(" · ")+'</div>')+'</div>'+
+       '<div class="mmid"><div class="mname">'+m.n+' <span class="mkcal mono">'+mck+' / '+mtot+' kcal</span></div>'+(m.note?'<div class="mnote">'+m.note+'</div>':'')+(open?'':'<div class="mpreview">'+foods.map(function(x){return x.name;}).join(" · ")+'</div>')+'</div>'+
        '<button class="mall'+(allOn?" on":"")+'" data-all="'+esc(m.n)+'" data-count="'+foods.length+'">'+(allOn?"tout ✓":"tout")+'</button>'+
        '<span class="wgo">'+(open?"▾":"▸")+'</span></div>';
     if(open){
