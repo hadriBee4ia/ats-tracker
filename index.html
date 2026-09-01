@@ -159,6 +159,27 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .kdaybtn{flex:1; background:var(--panel2); border:1px solid var(--border); color:var(--muted); border-radius:8px; padding:9px 2px; font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; cursor:pointer;}
 .kdaybtn.on{background:#8B5CF6; border-color:#8B5CF6; color:#fff;}
 .dosbadge{display:inline-block; font-size:10px; font-weight:700; color:var(--green); background:rgba(52,211,153,.12); border:1px solid rgba(52,211,153,.35); border-radius:5px; padding:1px 6px; margin-left:6px; vertical-align:middle;}
+.warmup{margin:0 20px 14px;}
+.wubtn{width:100%; display:flex; align-items:center; justify-content:space-between; background:var(--panel); border:1px solid var(--border); color:var(--chalk); border-radius:12px; padding:13px 14px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; cursor:pointer;}
+.wubtn .wuchev{color:var(--muted); transition:transform .15s;}
+.wubtn.open .wuchev{transform:rotate(90deg);}
+.wupanel{display:none; padding:12px 14px 2px;}
+.wupanel.open{display:block;}
+.wuitem{font-size:13px; color:var(--muted); line-height:1.5; padding-left:14px; position:relative; margin-bottom:9px;}
+.wuitem:before{content:"•"; position:absolute; left:0; color:var(--amber);}
+.cardiocard{margin:6px 20px 14px; background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:15px;}
+.cctitle{font-size:15px; font-weight:700;}
+.ccsub{font-size:12px; color:var(--muted); margin:3px 0 13px; line-height:1.4;}
+.ccrow{display:flex; gap:10px; margin-bottom:11px; align-items:flex-end;}
+.ccfield{flex:1;}
+.ccfield label{display:block; font-size:11px; font-weight:700; letter-spacing:.5px; color:var(--muted); text-transform:uppercase; margin-bottom:5px;}
+.ccinp{display:flex; align-items:center; gap:6px; background:var(--panel2); border:1px solid var(--border); border-radius:9px; padding:0 11px;}
+.ccinp input{flex:1; min-width:0; background:none; border:none; outline:none; color:var(--chalk); font-family:'JetBrains Mono',monospace; font-size:15px; padding:11px 0;}
+.ccinp span{font-size:12px; color:var(--muted); flex:none;}
+.ccsw{flex:none; align-self:stretch; margin-top:18px; border:1px solid var(--amber); background:var(--amber); color:#fff; border-radius:9px; padding:0 16px; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; cursor:pointer;}
+.ccest{font-size:13px; font-weight:600; color:var(--green); margin:2px 0 12px;}
+.ccsave{width:100%; border:1px solid var(--border); background:var(--panel2); color:var(--chalk); border-radius:10px; padding:12px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; cursor:pointer;}
+.ccsave:active{opacity:.7;}
 .cfgwarn{font-size:12px; color:var(--amber); background:rgba(255,182,39,.08); border:1px solid rgba(255,182,39,.3); border-radius:8px; padding:9px 11px; margin:4px 0 10px;}
 .cfggen{width:100%; border:none; border-radius:12px; padding:15px; font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; color:#fff; background:var(--amber); cursor:pointer; margin-top:6px;}
 .cfggen:disabled{opacity:.4;}
@@ -814,6 +835,13 @@ function viewForce(){
        '<div class="num mono">'+s.n+'</div><div class="ti"><span class="dot" style="background:'+s.tag+'"></span>'+tt+'</div></button>';
   });
   h+='</div><div class="sub">'+sess.long+'</div>';
+  var firstEx=(sess.blocks[0]&&sess.blocks[0].items[0])?sess.blocks[0].items[0].name:"l'exercice";
+  h+='<div class="warmup"><button class="wubtn" id="wubtn">🔥 Échauffement · ~5 min<span class="wuchev">▸</span></button>'+
+     '<div class="wupanel" id="wupanel">'+
+     '<div class="wuitem">2–3 min de cardio léger (corde à sauter, marche rapide, montées de genoux) pour monter en température.</div>'+
+     '<div class="wuitem">Mobilité articulaire : '+wuFocus(sess.mob||"m3")+' — cercles lents et amples.</div>'+
+     '<div class="wuitem">1–2 séries légères de « '+esc(firstEx)+' » en montée de charge progressive.</div>'+
+     '</div></div>';
   sess.blocks.forEach(function(b){
     h+='<div class="block"><div class="elabel">'+b.label+'</div>';
     b.items.forEach(function(it){
@@ -845,10 +873,31 @@ function viewForce(){
     });
     h+='</div>';
   });
+  var cp=getCardioPref();
+  h+='<div class="cardiocard"><div class="cctitle">Cardio · optionnel</div>'+
+     '<div class="ccsub">Marche rapide en pente (ou règle à ta guise). Saisis la durée ou lance le chrono.</div>'+
+     '<div class="ccrow">'+
+       '<div class="ccfield"><label>Vitesse</label><div class="ccinp"><input id="cspeed" inputmode="decimal" value="'+cp.speed+'"><span>km/h</span></div></div>'+
+       '<div class="ccfield"><label>Pente</label><div class="ccinp"><input id="cincline" inputmode="numeric" value="'+cp.incline+'"><span>%</span></div></div>'+
+     '</div>'+
+     '<div class="ccrow">'+
+       '<div class="ccfield" style="flex:1.3"><label>Durée</label><div class="ccinp"><input id="cmin" inputmode="decimal" placeholder="min"><span>min</span></div></div>'+
+       '<button class="ccsw" id="ccsw">▶ Chrono</button>'+
+     '</div>'+
+     '<div class="ccest" id="ccest">Saisis une durée ou lance le chrono</div>'+
+     '<button class="ccsave" id="ccsave">Enregistrer le cardio</button></div>';
   h+='<div class="savebar"><div class="savebar-in"><button class="save empty" id="finishForce">Terminer la séance</button></div></div>';
   return h;
 }
 function wireForce(){
+  var wub=document.getElementById("wubtn");
+  if(wub) wub.onclick=function(){ document.getElementById("wupanel").classList.toggle("open"); wub.classList.toggle("open"); };
+  if(cardioSW.iv){ clearInterval(cardioSW.iv); cardioSW.iv=null; }
+  if(cardioSW.running){ cardioSW.iv=setInterval(cardioTick,1000); cardioTick(); }
+  ["cspeed","cincline","cmin"].forEach(function(id){ var el=document.getElementById(id); if(el) el.oninput=updateCardioEst; });
+  var csw=document.getElementById("ccsw"); if(csw) csw.onclick=toggleCardioSW;
+  var csv=document.getElementById("ccsave"); if(csv) csv.onclick=saveCardio;
+  updateCardioEst();
   var fms=document.getElementById("fmodesel");
   if(fms) fms.onchange=function(){ var k=fms.value; state.forceMode=k; state.active=MODES[k].sessions[0]; renderMain(); };
   Array.prototype.forEach.call(document.querySelectorAll("[data-sess]"), function(b){
@@ -1186,9 +1235,51 @@ function dailyTargets(kg){
 function stepsToday(){ var v=rawGet("ats:steps:"+dayKey()); var n=parseInt(v,10); return isNaN(n)?0:n; }
 function setSteps(n){ rawSet("ats:steps:"+dayKey(), String(n)); }
 function sportBurn(kg){
-  var t=new Date(); t.setHours(0,0,0,0); var b=0;
-  log.forEach(function(e){ if(new Date(e.date)>=t){ if(e.type==="strength"||(!e.type&&e.entries)) b+=kg*4; else if(e.type==="combat") b+=kg*7; } });
-  return Math.round(b);
+  var t=new Date(); t.setHours(0,0,0,0); var net=0, C=kg*0.0175; // 3.5*kg/200
+  log.forEach(function(e){ if(new Date(e.date)<t) return;
+    if(e.type==="strength"||(!e.type&&e.entries)){
+      if(e.entries){ for(var k in e.entries){
+        var n=e.entries[k].length, it=ALL_ITEMS[k], rest=(it&&it.restSec)?it.restSec:90;
+        // par série : ~0,7 min d'effort à ~6 MET + repos à ~1,5 MET, en net au-dessus du repos
+        net += n * ((6-1)*0.7 + (1.5-1)*(rest/60)) * C;
+      } }
+    } else if(e.type==="combat"){ net += (7-1)*60*C; } // ~1 h à ~7 MET, net
+    else if(e.type==="cardio"){ net += e.kcal||0; }
+  });
+  return Math.round(net);
+}
+function wuFocus(mob){ return mob==="m1"?"épaules, poignets, haut du dos":(mob==="m2"?"hanches, genoux, chevilles":"dos, épaules, thoracique"); }
+function getCardioPref(){ try{ var v=rawGet("ats:cardiopref"); if(v){ var o=JSON.parse(v); return {speed:o.speed||5, incline:(o.incline!=null?o.incline:10)}; } }catch(e){} return {speed:5, incline:10}; }
+function setCardioPref(sp,inc){ rawSet("ats:cardiopref", JSON.stringify({speed:sp, incline:inc})); }
+function cardioKcal(kg, min, speed, grade){
+  if(!(min>0)||!(kg>0)) return 0;
+  var v=speed*1000/60;                          // m/min
+  var vo2=3.5 + 0.1*v + 1.8*v*(grade/100);      // ml/kg/min (équation ACSM marche)
+  return Math.round((vo2/3.5-1)*3.5*kg/200*min);// net au-dessus du repos
+}
+var cardioSW={running:false, base:0, start:0, iv:null};
+function cardioElapsed(){ return cardioSW.base + (cardioSW.running?Math.floor((Date.now()-cardioSW.start)/1000):0); }
+function cardioTick(){ var s=cardioElapsed(), b=document.getElementById("ccsw"), m=document.getElementById("cmin"); if(b) b.textContent="⏸ "+fmtClock(s); if(m) m.value=(s/60).toFixed(1); updateCardioEst(); }
+function toggleCardioSW(){
+  if(cardioSW.running){ cardioSW.base=cardioElapsed(); cardioSW.running=false; if(cardioSW.iv){clearInterval(cardioSW.iv);cardioSW.iv=null;} var b=document.getElementById("ccsw"); if(b) b.textContent="▶ Reprendre"; }
+  else { cardioSW.running=true; cardioSW.start=Date.now(); if(cardioSW.iv) clearInterval(cardioSW.iv); cardioSW.iv=setInterval(cardioTick,1000); cardioTick(); }
+}
+function updateCardioEst(){
+  var el=document.getElementById("ccest"); if(!el) return;
+  var kg=latestWeight()||0, g=function(id){ var e=document.getElementById(id); return e?parseFloat(String(e.value).replace(",",".")):0; };
+  var min=g("cmin"), sp=g("cspeed"), inc=g("cincline");
+  if(!kg){ el.textContent="Renseigne ton poids dans Progrès pour l'estimation"; return; }
+  if(min>0){ el.textContent="≈ "+cardioKcal(kg,min,sp,inc)+" kcal brûlées (net)"; }
+  else { el.textContent="Saisis une durée ou lance le chrono"; }
+}
+function saveCardio(){
+  var kg=latestWeight()||0, g=function(id){ var e=document.getElementById(id); return e?parseFloat(String(e.value).replace(",",".")):0; };
+  var min=g("cmin"), sp=g("cspeed")||5, inc=g("cincline")||0;
+  if(!(min>0)){ flash("Saisis une durée de cardio"); return; }
+  var kc=cardioKcal(kg,min,sp,inc);
+  log.push({type:"cardio", date:new Date().toISOString(), min:Math.round(min*10)/10, speed:sp, incline:inc, kcal:kc});
+  setCardioPref(sp,inc); cardioSW={running:false, base:0, start:0, iv:null};
+  saveLog(); renderHeader(); flash("Cardio enregistré · "+kc+" kcal"); renderMain();
 }
 function consumedToday(kg){
   var T=dailyTargets(kg), plan=(T.units>0?MEAL_PLANS.train:MEAL_PLANS.rest), checked=dayFoods(), c=0;
@@ -1318,6 +1409,9 @@ function viewHist(){
     } else if(e.type==="weight"){
       h+='<div class="hentry"><div class="hh"><span class="hs" style="color:var(--blue)">Poids</span>'+
          '<span class="hd mono">'+fmtDate(e.date)+'</span></div><div class="hb mono">'+e.kg+' kg</div></div>';
+    } else if(e.type==="cardio"){
+      h+='<div class="hentry"><div class="hh"><span class="hs" style="color:#34D399">Cardio</span>'+
+         '<span class="hd mono">'+fmtDate(e.date)+'</span></div><div class="hb mono">'+e.min+' min · '+e.speed+' km/h · pente '+e.incline+'% · '+(e.kcal||0)+' kcal</div></div>';
     } else {
       var s=SESSIONS.filter(function(x){return x.id===e.sessionId;})[0];
       var summary=Object.keys(e.entries).map(function(id){
