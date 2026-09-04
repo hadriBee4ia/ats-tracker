@@ -111,6 +111,9 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
   padding:12px; font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; cursor:pointer;}
 .iobtn:active{transform:scale(.98);}
 .hentry{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:13px 15px; margin-bottom:9px;}
+.hclick{cursor:pointer;}
+.hclick:active{opacity:.7;}
+.hedit{font-size:11px; color:var(--amber); font-weight:600; margin-top:7px;}
 .hentry .hh{display:flex; justify-content:space-between; align-items:center;}
 .hentry .hd{font-size:12px; color:var(--muted);}
 .hentry .hs{font-size:14px; font-weight:600;}
@@ -1521,14 +1524,18 @@ function viewHist(){
           return nm+" → "+vals;
         }).join("\n"));
       } else { body="séance enregistrée"+(e.sets?(" · "+e.sets+" séries"):"")+(e.manual?" · saisie manuelle":""); }
-      h+='<div class="hentry"><div class="hh"><span class="hs" style="color:'+(s?s.tag:"#fff")+'">'+(s?s.title:"Séance")+'</span>'+
-         '<span class="hd mono">'+fmtDate(e.date)+'</span></div><div class="hb mono">'+body+'</div></div>';
+      h+='<div class="hentry hclick" data-hsid="'+(e.sessionId||"")+'" data-hdate="'+e.date+'"><div class="hh"><span class="hs" style="color:'+(s?s.tag:"#fff")+'">'+(s?s.title:"Séance")+'</span>'+
+         '<span class="hd mono">'+fmtDate(e.date)+'</span></div><div class="hb mono">'+body+'</div><div class="hedit">appuie pour '+((e.entries&&Object.keys(e.entries).length)?"modifier le détail":"saisir le détail")+' ›</div></div>';
     }
   });
   h+='<button class="danger" id="clearBtn">Effacer l\'historique</button></div>';
   return h;
 }
 function wireHist(){
+  Array.prototype.forEach.call(document.querySelectorAll("#main .hclick"), function(el){
+    el.onclick=function(){ var sid=el.getAttribute("data-hsid"), dt=el.getAttribute("data-hdate"); if(!sid) return;
+      var k=ymd(new Date(dt)); state.active=sid; state.forceMode=modeOf(sid); state.logDate=(k===dayKey())?null:k; state.mode="force"; renderMain(); renderNav(); window.scrollTo(0,0); };
+  });
   var pb=document.getElementById("pastbtn"); if(pb) pb.onclick=function(){ pastOpen=!pastOpen; renderMain(); };
   Array.prototype.forEach.call(document.querySelectorAll("#main .ptype"), function(b){ b.onclick=function(){ pastType=b.getAttribute("data-ptype"); renderMain(); }; });
   var pd=document.getElementById("pdate"); if(pd) pd.onchange=function(){ pastDate=pd.value; };
