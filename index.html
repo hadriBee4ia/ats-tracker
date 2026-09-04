@@ -634,13 +634,13 @@ function readyToProgress(item){
 function weekStart(){ var d=new Date(); var day=(d.getDay()+6)%7; d.setHours(0,0,0,0); d.setDate(d.getDate()-day); return d; }
 function sameDay(iso,date){ var d=new Date(iso); return d.getFullYear()===date.getFullYear()&&d.getMonth()===date.getMonth()&&d.getDate()===date.getDate(); }
 function dayDone(w,date){ return log.some(function(e){ if(!sameDay(e.date,date)) return false; if(w.kind==="combat") return e.type==="combat"; return (e.type==="strength"||(!e.type&&e.entries)) && e.sessionId===w.ref; }); }
+function dayActual(date){ var found=null; log.forEach(function(e){ if(!sameDay(e.date,date)) return; if(e.type==="combat") found={kind:"combat"}; else if(e.type==="strength"||(!e.type&&e.entries)) found={kind:"force", ref:e.sessionId}; }); return found; }
 function toggleDayLog(i){
-  var plan=getPlan(), w=plan[i]; if(!w||(w.kind!=="force"&&w.kind!=="combat")) return;
+  var plan=getPlan(), w=plan[i]; if(!w) return;
   var date=new Date(weekStart()); date.setDate(date.getDate()+i); date.setHours(12,0,0,0);
-  if(dayDone(w,date)){
-    log=log.filter(function(e){ if(!sameDay(e.date,date)) return true; if(w.kind==="combat") return e.type!=="combat"; return !((e.type==="strength"||(!e.type&&e.entries)) && e.sessionId===w.ref); });
-  } else if(w.kind==="combat"){ log.push({type:"combat", date:date.toISOString()}); }
-  else { log.push({type:"strength", date:date.toISOString(), sessionId:w.ref, manual:true}); }
+  if(dayActual(date)){ log=log.filter(function(e){ return !(sameDay(e.date,date) && (e.type==="combat"||e.type==="strength"||(!e.type&&e.entries))); }); }
+  else if(w.kind==="combat"){ log.push({type:"combat", date:date.toISOString()}); }
+  else if(w.kind==="force"){ log.push({type:"strength", date:date.toISOString(), sessionId:w.ref, manual:true}); }
   saveLog(); renderHeader(); renderMain();
 }
 function weeklyLoad(){ var ws=weekStart(), f=0,c=0,m=0; log.forEach(function(e){ if(new Date(e.date)>=ws){ if(e.type==="combat")c++; else if(e.type==="stretch")m++; else if(e.type==="strength"||(!e.type&&e.entries))f++; } }); return {f:f,c:c,m:m}; }
@@ -758,15 +758,20 @@ function viewSemaine(){
   }
   h+='<div class="weeklist"><div class="wlabel">La semaine</div>';
   getPlan().forEach(function(w, i){
-    var s=(w.kind==="force")?SESSIONS.filter(function(x){return x.id===w.ref;})[0]:null;
-    var now=(w.idx===dow), clickable=(w.kind==="force"), canLog=(w.kind==="force"||w.kind==="combat");
     var wd=new Date(weekStart()); wd.setDate(wd.getDate()+i);
-    var done=canLog && dayDone(w, wd);
-    h+='<div class="wrow'+(now?" now":"")+(clickable?" clickable":"")+(done?" done":"")+'"'+(clickable?' data-go="'+w.ref+'" data-logi="'+i+'"':'')+'>'+
+    var act=dayActual(wd);
+    var kind=act?act.kind:w.kind, ref=act?(act.ref||null):w.ref;
+    var s=(kind==="force")?SESSIONS.filter(function(x){return x.id===ref;})[0]:null;
+    var now=(w.idx===dow), clickable=(kind==="force"), canLog=(kind==="force"||kind==="combat");
+    var done=!!act;
+    var label=(kind==="repos")?"Repos":(kind==="combat"?"Krav maga":(s?s.title:(w.label||"Séance")));
+    var offplan=act && w.kind!==kind ? " · hors planning" : "";
+    var sub=done?("fait ✓"+offplan):(w.kind==="force"?"Force + étirements":w.kind==="combat"?"Soir":"Récupération");
+    h+='<div class="wrow'+(now?" now":"")+(clickable?" clickable":"")+(done?" done":"")+'"'+(clickable?' data-go="'+ref+'" data-logi="'+i+'"':'')+'>'+
        '<div class="wday">'+w.day+'</div>'+
-       (w.kind!=="repos"?'<span class="wdot" style="background:'+(s?s.tag:"#8B5CF6")+'"></span>':'')+
-       '<div class="wmid"><div class="wact">'+(w.kind==="repos"?"Repos":(w.kind==="combat"?"Krav maga":((sessById(w.ref)||{}).title||w.label)))+'</div>'+
-       '<div class="wsub">'+(w.kind==="force"?"Force + étirements":w.kind==="combat"?"Soir":"Récupération")+'</div></div>'+
+       (kind!=="repos"?'<span class="wdot" style="background:'+(s?s.tag:"#8B5CF6")+'"></span>':'')+
+       '<div class="wmid"><div class="wact">'+label+'</div>'+
+       '<div class="wsub">'+sub+'</div></div>'+
        (now?'<span class="nowchip">AUJ.</span>':'')+
        (canLog?'<button class="wcheck'+(done?" on":"")+'" data-logday="'+i+'" aria-label="Marquer comme fait">'+CHECK_SVG+'</button>':'')+'</div>';
   });
