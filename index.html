@@ -649,6 +649,8 @@ function combatDoneToday(){ var t=new Date(); t.setHours(0,0,0,0); return log.so
 function forceDoneToday(ref){ var t=new Date(); t.setHours(0,0,0,0); return log.some(function(e){ return (e.type==="strength"||(!e.type&&e.entries)) && e.sessionId===ref && new Date(e.date)>=t; }); }
 function mobDoneToday(mobId){ var t=new Date(); t.setHours(0,0,0,0); return log.some(function(e){ return e.type==="stretch" && e.routineId===mobId && new Date(e.date)>=t; }); }
 function getWip(sid){ try{ var v=rawGet("ats:wip:"+sid+":"+logDateKey()); if(!v) return null; var o=JSON.parse(v); return o.ex||null; }catch(e){} return null; }
+function loggedEntry(sid){ var dk=logDateKey(), found=null; log.forEach(function(e){ if((e.type==="strength"||(!e.type&&e.entries)) && e.sessionId===sid && ymd(new Date(e.date))===dk){ found=e; } }); return found; }
+function loggedAsWip(sid){ var e=loggedEntry(sid); if(!e||!e.entries) return null; var ex={}; for(var k in e.entries){ ex[k]=e.entries[k].map(function(x){return {reps:x.reps||"", load:x.load||"", done:!!x.done};}); } return ex; }
 function readForceDom(sid){
   var ex={}, sess=sessById(sid); if(!sess) return ex;
   sess.blocks.forEach(function(b){ b.items.forEach(function(it){
@@ -865,7 +867,7 @@ function viewForce(){
   var msess=MODES[fm].sessions.map(sessById).filter(Boolean);
   if(!msess.some(function(x){return x.id===state.active;})) state.active=msess[0].id;
   var sess=sessById(state.active);
-  var wip=getWip(state.active);
+  var wip=getWip(state.active) || loggedAsWip(state.active);
   var h='<div class="fmoderow"><span class="fmodelbl">Programme</span><div class="fmodewrap"><select class="fmodesel" id="fmodesel">'+["cali","salle","maison"].map(function(k){return '<option value="'+k+'"'+(k===fm?" selected":"")+'>'+MODES[k].label+'</option>';}).join("")+'</select></div></div>';
   h+='<div class="tabs">';
   msess.forEach(function(s){
@@ -926,7 +928,7 @@ function viewForce(){
      '</div>'+
      '<div class="ccest" id="ccest">Saisis une durée ou lance le chrono</div>'+
      '<button class="ccsave" id="ccsave">Enregistrer le cardio</button></div>';
-  h+='<div class="savebar"><div class="savebar-in"><button class="save empty" id="finishForce">Terminer la séance</button></div></div>';
+  h+='<div class="savebar"><div class="savebar-in"><button class="save empty" id="finishForce">'+(loggedEntry(state.active)?"Mettre à jour la séance":"Terminer la séance")+'</button></div></div>';
   return h;
 }
 function wireForce(){
@@ -992,6 +994,8 @@ function finishForce(){
   var entries=collectForce();
   if(Object.keys(entries).length===0) return;
   var date=state.logDate ? new Date(state.logDate+"T12:00:00").toISOString() : new Date().toISOString();
+  var dk=logDateKey();
+  log=log.filter(function(e){ return !((e.type==="strength"||(!e.type&&e.entries)) && e.sessionId===state.active && ymd(new Date(e.date))===dk); });
   log.push({type:"strength", date:date, sessionId:state.active, entries:entries});
   clearWip(state.active); state.logDate=null;
   saveLog(); renderHeader(); state.mode="semaine"; renderMain(); renderNav(); window.scrollTo(0,0); flash("Séance enregistrée");
