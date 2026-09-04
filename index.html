@@ -143,6 +143,10 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .wrow .wsub{font-size:11px; color:var(--muted); margin-top:1px;}
 .wrow .nowchip{font-size:9px; font-weight:700; letter-spacing:.5px; color:#fff; background:var(--amber); border-radius:4px; padding:2px 6px; flex:none;}
 .wrow .wgo{color:var(--muted); font-size:20px; flex:none; line-height:1;}
+.wcheck{flex:none; width:34px; height:34px; border-radius:50%; border:1.5px solid var(--border); background:none; color:var(--muted); display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;}
+.wcheck.on{background:var(--green); border-color:var(--green); color:var(--ink);}
+.wcheck svg{width:16px; height:16px;}
+.wrow.done .wact{color:var(--green);}
 .cfg{padding:0 20px 20px;}
 .cfgback{background:none; border:none; color:var(--muted); font-family:'Space Grotesk',sans-serif; font-size:13px; cursor:pointer; padding:6px 0; margin-bottom:4px;}
 .cfgtitle{font-size:20px; font-weight:700; letter-spacing:-.3px; margin-bottom:6px;}
@@ -160,7 +164,9 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .kdaybtn.on{background:#8B5CF6; border-color:#8B5CF6; color:#fff;}
 .dosbadge{display:inline-block; font-size:10px; font-weight:700; color:var(--green); background:rgba(52,211,153,.12); border:1px solid rgba(52,211,153,.35); border-radius:5px; padding:1px 6px; margin-left:6px; vertical-align:middle;}
 .warmup{margin:0 20px 14px;}
-.wubtn{width:100%; display:flex; align-items:center; justify-content:space-between; background:var(--panel); border:1px solid var(--border); color:var(--chalk); border-radius:12px; padding:13px 14px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; cursor:pointer;}
+.logdatebar{margin:0 20px 12px; background:rgba(139,92,246,.12); border:1px solid rgba(139,92,246,.4); border-radius:10px; padding:10px 12px; font-size:13px; color:var(--chalk); display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.logdatebar b{text-transform:capitalize;}
+.logdatebar button{margin-left:auto; background:var(--panel2); border:1px solid var(--border); color:var(--muted); border-radius:7px; padding:6px 10px; font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; cursor:pointer;}.wubtn{width:100%; display:flex; align-items:center; justify-content:space-between; background:var(--panel); border:1px solid var(--border); color:var(--chalk); border-radius:12px; padding:13px 14px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; cursor:pointer;}
 .wubtn .wuchev{color:var(--muted); transition:transform .15s;}
 .wubtn.open .wuchev{transform:rotate(90deg);}
 .wupanel{display:none; padding:12px 14px 2px;}
@@ -180,6 +186,19 @@ header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var
 .ccest{font-size:13px; font-weight:600; color:var(--green); margin:2px 0 12px;}
 .ccsave{width:100%; border:1px solid var(--border); background:var(--panel2); color:var(--chalk); border-radius:10px; padding:12px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; cursor:pointer;}
 .ccsave:active{opacity:.7;}
+.pastcard{margin-bottom:14px;}
+.pastbtn{width:100%; display:flex; align-items:center; justify-content:space-between; background:var(--panel); border:1px solid var(--border); color:var(--chalk); border-radius:12px; padding:13px 14px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; cursor:pointer;}
+.pastbtn .wuchev{color:var(--muted); transition:transform .15s;}
+.pastbtn.open .wuchev{transform:rotate(90deg);}
+.pastpanel{display:none; padding:6px 2px 2px;}
+.pastpanel.open{display:block;}
+.plab{display:block; font-size:11px; font-weight:700; letter-spacing:.5px; color:var(--muted); text-transform:uppercase; margin:11px 0 5px;}
+.pdate{width:100%; box-sizing:border-box; background:var(--panel2); border:1px solid var(--border); border-radius:9px; color:var(--chalk); font-family:'JetBrains Mono',monospace; font-size:15px; padding:11px; outline:none;}
+.ptypes{display:flex; gap:6px; margin-top:10px;}
+.ptype{flex:1; min-width:0; background:var(--panel2); border:1px solid var(--border); color:var(--muted); border-radius:8px; padding:9px 3px; font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; cursor:pointer;}
+.ptype.on{background:var(--amber); border-color:var(--amber); color:#fff;}
+.psave{width:100%; margin-top:14px; border:none; background:var(--amber); color:#fff; border-radius:10px; padding:13px; font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; cursor:pointer;}
+.psave:active{opacity:.8;}
 .cfgwarn{font-size:12px; color:var(--amber); background:rgba(255,182,39,.08); border:1px solid rgba(255,182,39,.3); border-radius:8px; padding:9px 11px; margin:4px 0 10px;}
 .cfggen{width:100%; border:none; border-radius:12px; padding:15px; font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; color:#fff; background:var(--amber); cursor:pointer; margin-top:6px;}
 .cfggen:disabled{opacity:.4;}
@@ -579,7 +598,7 @@ function rawSet(k,v){ try { localStorage.setItem(k,v); } catch(e){ memFallback[k
 var log = (function(){ try { var v=rawGet(LOG_KEY); return v? JSON.parse(v):[]; } catch(e){ return []; } })();
 function saveLog(){ rawSet(LOG_KEY, JSON.stringify(log)); }
 
-var state = { mode:"semaine", active:"s1", routine:"m1", progEx:null, forceMode:"cali" };
+var state = { mode:"semaine", active:"s1", routine:"m1", progEx:null, forceMode:"cali", logDate:null };
 function modeOf(sid){ for(var k in MODES){ if(MODES[k].sessions.indexOf(sid)>=0) return k; } return "cali"; }
 var timer = null, timerIv = null, audioCtx = null, speechPrimed = false;
 
@@ -613,12 +632,23 @@ function readyToProgress(item){
   return null;
 }
 function weekStart(){ var d=new Date(); var day=(d.getDay()+6)%7; d.setHours(0,0,0,0); d.setDate(d.getDate()-day); return d; }
+function sameDay(iso,date){ var d=new Date(iso); return d.getFullYear()===date.getFullYear()&&d.getMonth()===date.getMonth()&&d.getDate()===date.getDate(); }
+function dayDone(w,date){ return log.some(function(e){ if(!sameDay(e.date,date)) return false; if(w.kind==="combat") return e.type==="combat"; return (e.type==="strength"||(!e.type&&e.entries)) && e.sessionId===w.ref; }); }
+function toggleDayLog(i){
+  var plan=getPlan(), w=plan[i]; if(!w||(w.kind!=="force"&&w.kind!=="combat")) return;
+  var date=new Date(weekStart()); date.setDate(date.getDate()+i); date.setHours(12,0,0,0);
+  if(dayDone(w,date)){
+    log=log.filter(function(e){ if(!sameDay(e.date,date)) return true; if(w.kind==="combat") return e.type!=="combat"; return !((e.type==="strength"||(!e.type&&e.entries)) && e.sessionId===w.ref); });
+  } else if(w.kind==="combat"){ log.push({type:"combat", date:date.toISOString()}); }
+  else { log.push({type:"strength", date:date.toISOString(), sessionId:w.ref, manual:true}); }
+  saveLog(); renderHeader(); renderMain();
+}
 function weeklyLoad(){ var ws=weekStart(), f=0,c=0,m=0; log.forEach(function(e){ if(new Date(e.date)>=ws){ if(e.type==="combat")c++; else if(e.type==="stretch")m++; else if(e.type==="strength"||(!e.type&&e.entries))f++; } }); return {f:f,c:c,m:m}; }
 function weightSeries(){ var out=[]; log.forEach(function(e){ if(e.type==="weight"){ var v=parseFloat(String(e.kg).replace(",",".")); if(!isNaN(v)) out.push({date:e.date, v:v}); } }); return out; }
 function combatDoneToday(){ var t=new Date(); t.setHours(0,0,0,0); return log.some(function(e){ return e.type==="combat" && new Date(e.date)>=t; }); }
 function forceDoneToday(ref){ var t=new Date(); t.setHours(0,0,0,0); return log.some(function(e){ return (e.type==="strength"||(!e.type&&e.entries)) && e.sessionId===ref && new Date(e.date)>=t; }); }
 function mobDoneToday(mobId){ var t=new Date(); t.setHours(0,0,0,0); return log.some(function(e){ return e.type==="stretch" && e.routineId===mobId && new Date(e.date)>=t; }); }
-function getWip(sid){ try{ var v=rawGet("ats:wip:"+sid); if(!v) return null; var o=JSON.parse(v); if(o&&o.date===dayKey()) return o.ex; }catch(e){} return null; }
+function getWip(sid){ try{ var v=rawGet("ats:wip:"+sid+":"+logDateKey()); if(!v) return null; var o=JSON.parse(v); return o.ex||null; }catch(e){} return null; }
 function readForceDom(sid){
   var ex={}, sess=sessById(sid); if(!sess) return ex;
   sess.blocks.forEach(function(b){ b.items.forEach(function(it){
@@ -628,8 +658,8 @@ function readForceDom(sid){
   }); });
   return ex;
 }
-function saveWip(){ if(state.mode!=="force") return; try{ rawSet("ats:wip:"+state.active, JSON.stringify({date:dayKey(), ex:readForceDom(state.active)})); }catch(e){} }
-function clearWip(sid){ rawSet("ats:wip:"+sid, ""); }
+function saveWip(){ if(state.mode!=="force") return; try{ rawSet("ats:wip:"+state.active+":"+logDateKey(), JSON.stringify({ex:readForceDom(state.active)})); }catch(e){} }
+function clearWip(sid){ rawSet("ats:wip:"+sid+":"+logDateKey(), ""); }
 function setLastExport(){ rawSet("ats:lastexport", new Date().toISOString()); }
 function lastExportDays(){ var v=rawGet("ats:lastexport"); if(!v) return null; return Math.floor((new Date()-new Date(v))/(24*3600*1000)); }
 
@@ -648,7 +678,7 @@ function renderNav(){
     return '<button data-mode="'+d[0]+'" class="'+(m===d[0]?"on":"")+'">'+d[1]+'</button>';
   }).join("");
   Array.prototype.forEach.call(document.querySelectorAll("#nav button"), function(b){
-    b.onclick=function(){ state.mode=b.getAttribute("data-mode"); renderMain(); renderNav(); };
+    b.onclick=function(){ state.logDate=null; state.mode=b.getAttribute("data-mode"); renderMain(); renderNav(); };
   });
 }
 
@@ -725,24 +755,33 @@ function viewSemaine(){
        '<div class="ecap">Brûlé = métabolisme de base (Mifflin si taille/âge renseignés dans Progrès) + pas + sport. Consommé = repas cochés dans Nutrition. Pour perdre du poids, vise le déficit (vert).</div></div>';
   }
   h+='<div class="weeklist"><div class="wlabel">La semaine</div>';
-  getPlan().forEach(function(w){
+  getPlan().forEach(function(w, i){
     var s=(w.kind==="force")?SESSIONS.filter(function(x){return x.id===w.ref;})[0]:null;
-    var now=(w.idx===dow), clickable=(w.kind==="force");
-    h+='<div class="wrow'+(now?" now":"")+(clickable?" clickable":"")+'"'+(clickable?' data-go="'+w.ref+'"':'')+'>'+
+    var now=(w.idx===dow), clickable=(w.kind==="force"), canLog=(w.kind==="force"||w.kind==="combat");
+    var wd=new Date(weekStart()); wd.setDate(wd.getDate()+i);
+    var done=canLog && dayDone(w, wd);
+    h+='<div class="wrow'+(now?" now":"")+(clickable?" clickable":"")+(done?" done":"")+'"'+(clickable?' data-go="'+w.ref+'" data-logi="'+i+'"':'')+'>'+
        '<div class="wday">'+w.day+'</div>'+
        (w.kind!=="repos"?'<span class="wdot" style="background:'+(s?s.tag:"#8B5CF6")+'"></span>':'')+
        '<div class="wmid"><div class="wact">'+(w.kind==="repos"?"Repos":(w.kind==="combat"?"Krav maga":((sessById(w.ref)||{}).title||w.label)))+'</div>'+
        '<div class="wsub">'+(w.kind==="force"?"Force + étirements":w.kind==="combat"?"Soir":"Récupération")+'</div></div>'+
        (now?'<span class="nowchip">AUJ.</span>':'')+
-       (clickable?'<span class="wgo">›</span>':'')+'</div>';
+       (canLog?'<button class="wcheck'+(done?" on":"")+'" data-logday="'+i+'" aria-label="Marquer comme fait">'+CHECK_SVG+'</button>':'')+'</div>';
   });
   h+='</div>';
   h+='<div style="padding:0 20px"><button class="cfgbtn" id="cfgopen">⚙ Configurer mon programme</button></div>';
   return h;
 }
 function wireSemaine(){
+  Array.prototype.forEach.call(document.querySelectorAll("#main .wcheck"), function(b){
+    b.onclick=function(ev){ ev.stopPropagation(); toggleDayLog(parseInt(b.getAttribute("data-logday"),10)); };
+  });
   Array.prototype.forEach.call(document.querySelectorAll("[data-go]"), function(el){
-    el.onclick=function(){ var ref=el.getAttribute("data-go"); state.active=ref; state.forceMode=modeOf(ref); state.mode="force"; renderMain(); renderNav(); window.scrollTo(0,0); };
+    el.onclick=function(){ var ref=el.getAttribute("data-go"), li=el.getAttribute("data-logi");
+      state.active=ref; state.forceMode=modeOf(ref);
+      if(li!=null){ var wd=new Date(weekStart()); wd.setDate(wd.getDate()+parseInt(li,10)); var k=ymd(wd); state.logDate=(k===dayKey())?null:k; }
+      else { state.logDate=null; }
+      state.mode="force"; renderMain(); renderNav(); window.scrollTo(0,0); };
   });
   Array.prototype.forEach.call(document.querySelectorAll("[data-mob]"), function(el){
     el.onclick=function(){ state.routine=el.getAttribute("data-mob"); state.mode="mobilite"; renderMain(); renderNav(); window.scrollTo(0,0); };
@@ -835,6 +874,7 @@ function viewForce(){
        '<div class="num mono">'+s.n+'</div><div class="ti"><span class="dot" style="background:'+s.tag+'"></span>'+tt+'</div></button>';
   });
   h+='</div><div class="sub">'+sess.long+'</div>';
+  if(state.logDate){ var ld=new Date(state.logDate+"T12:00:00"); h+='<div class="logdatebar">📅 Enregistrement pour <b>'+ld.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})+'</b><button id="logtoday">Aujourd\'hui</button></div>'; }
   var firstEx=(sess.blocks[0]&&sess.blocks[0].items[0])?sess.blocks[0].items[0].name:"l'exercice";
   h+='<div class="warmup"><button class="wubtn" id="wubtn">🔥 Échauffement · ~5 min<span class="wuchev">▸</span></button>'+
      '<div class="wupanel" id="wupanel">'+
@@ -890,6 +930,7 @@ function viewForce(){
   return h;
 }
 function wireForce(){
+  var lt=document.getElementById("logtoday"); if(lt) lt.onclick=function(){ state.logDate=null; renderMain(); };
   var wub=document.getElementById("wubtn");
   if(wub) wub.onclick=function(){ document.getElementById("wupanel").classList.toggle("open"); wub.classList.toggle("open"); };
   if(cardioSW.iv){ clearInterval(cardioSW.iv); cardioSW.iv=null; }
@@ -950,8 +991,9 @@ function refreshFinishForce(){
 function finishForce(){
   var entries=collectForce();
   if(Object.keys(entries).length===0) return;
-  log.push({type:"strength", date:new Date().toISOString(), sessionId:state.active, entries:entries});
-  clearWip(state.active);
+  var date=state.logDate ? new Date(state.logDate+"T12:00:00").toISOString() : new Date().toISOString();
+  log.push({type:"strength", date:date, sessionId:state.active, entries:entries});
+  clearWip(state.active); state.logDate=null;
   saveLog(); renderHeader(); state.mode="semaine"; renderMain(); renderNav(); window.scrollTo(0,0); flash("Séance enregistrée");
 }
 
@@ -1167,6 +1209,8 @@ function todayTrainingUnits(){
   return { units: actual>0?actual:(planned?1:0), actual:actual, planned:planned };
 }
 function dayKey(){ var d=new Date(), mo=d.getMonth()+1, da=d.getDate(); return d.getFullYear()+"-"+(mo<10?"0"+mo:mo)+"-"+(da<10?"0"+da:da); }
+function ymd(d){ var mo=d.getMonth()+1, da=d.getDate(); return d.getFullYear()+"-"+(mo<10?"0"+mo:mo)+"-"+(da<10?"0"+da:da); }
+function logDateKey(){ return state.logDate || dayKey(); }
 function dayFoods(){ try{ var v=rawGet("ats:foods:"+dayKey()); return v?JSON.parse(v):[]; }catch(e){ return []; } }
 function setDayFoods(a){ rawSet("ats:foods:"+dayKey(), JSON.stringify(a)); }
 function toggleFood(key){ var a=dayFoods(), i=a.indexOf(key); if(i>=0)a.splice(i,1); else a.push(key); setDayFoods(a); }
@@ -1243,6 +1287,7 @@ function sportBurn(kg){
         // par série : ~0,7 min d'effort à ~6 MET + repos à ~1,5 MET, en net au-dessus du repos
         net += n * ((6-1)*0.7 + (1.5-1)*(rest/60)) * C;
       } }
+      else if(e.sets){ net += e.sets * ((6-1)*0.7 + (1.5-1)*(90/60)) * C; }
     } else if(e.type==="combat"){ net += (7-1)*60*C; } // ~1 h à ~7 MET, net
     else if(e.type==="cardio"){ net += e.kcal||0; }
   });
@@ -1384,10 +1429,55 @@ function wireNutrition(){
 }
 
 /* ---- Historique ---- */
+var pastType="combat", pastOpen=false, pastDate="";
+function pastForm(){
+  var types=[["combat","Krav"],["strength","Muscu"],["cardio","Cardio"],["stretch","Mobilité"]];
+  var d=pastDate||dayKey();
+  var h='<div class="pastcard"><button class="pastbtn'+(pastOpen?" open":"")+'" id="pastbtn">+ Séance oubliée<span class="wuchev">▸</span></button>'+
+        '<div class="pastpanel'+(pastOpen?" open":"")+'" id="pastpanel">'+
+        '<label class="plab">Date</label><input type="date" id="pdate" class="pdate" value="'+d+'" max="'+dayKey()+'">'+
+        '<div class="ptypes">'+types.map(function(t){return '<button class="ptype'+(pastType===t[0]?" on":"")+'" data-ptype="'+t[0]+'">'+t[1]+'</button>';}).join("")+'</div>';
+  if(pastType==="strength"){
+    h+='<label class="plab">Séance</label><div class="fmodewrap"><select id="psess" class="fmodesel">'+
+       ["cali","salle","maison"].map(function(k){ return MODES[k].sessions.map(function(sid){ var s=sessById(sid); return s?('<option value="'+sid+'">'+MODES[k].label+' · '+s.title.replace(/^(Salle|Maison) · /,"")+'</option>'):""; }).join(""); }).join("")+
+       '</select></div><label class="plab">Séries (optionnel)</label><input id="psets" class="pdate" inputmode="numeric" placeholder="nb de séries faites">';
+  } else if(pastType==="cardio"){
+    var cp=getCardioPref();
+    h+='<div class="ccrow" style="margin-top:10px">'+
+       '<div class="ccfield"><label>Vitesse</label><div class="ccinp"><input id="pcspeed" inputmode="decimal" value="'+cp.speed+'"><span>km/h</span></div></div>'+
+       '<div class="ccfield"><label>Pente</label><div class="ccinp"><input id="pcincl" inputmode="numeric" value="'+cp.incline+'"><span>%</span></div></div></div>'+
+       '<div class="ccfield" style="margin-top:9px"><label>Durée</label><div class="ccinp"><input id="pcmin" inputmode="decimal" placeholder="min"><span>min</span></div></div>';
+  } else if(pastType==="stretch"){
+    h+='<div class="ccsub" style="margin-top:10px">Enregistre une séance d\'étirements/mobilité pour ce jour.</div>';
+  } else {
+    h+='<div class="ccsub" style="margin-top:10px">Enregistre une séance de krav maga pour ce jour.</div>';
+  }
+  h+='<button class="psave" id="psave">Enregistrer la séance</button></div></div>';
+  return h;
+}
+function logPast(){
+  var dv=(document.getElementById("pdate")||{}).value || pastDate;
+  if(!dv){ flash("Choisis une date"); return; }
+  var date=new Date(dv+"T12:00:00").toISOString(), e={date:date};
+  if(pastType==="combat"){ e.type="combat"; }
+  else if(pastType==="stretch"){ var r=STRETCH.filter(function(x){return x.id==="m3";})[0]; e.type="stretch"; e.routineId="m3"; e.done=r?r.items.length:5; e.total=e.done; }
+  else if(pastType==="cardio"){
+    var kg=latestWeight()||0, g=function(id){ var el=document.getElementById(id); return el?parseFloat(String(el.value).replace(",",".")):0; };
+    var min=g("pcmin"), sp=g("pcspeed")||5, inc=g("pcincl")||0;
+    if(!(min>0)){ flash("Saisis une durée de cardio"); return; }
+    e.type="cardio"; e.min=Math.round(min*10)/10; e.speed=sp; e.incline=inc; e.kcal=cardioKcal(kg,min,sp,inc);
+  }
+  else if(pastType==="strength"){
+    var sid=(document.getElementById("psess")||{}).value||"s1", setsEl=document.getElementById("psets"), ns=setsEl?parseInt(setsEl.value,10):0;
+    e.type="strength"; e.sessionId=sid; e.manual=true; if(ns>0) e.sets=ns;
+  }
+  log.push(e); saveLog(); renderHeader(); pastOpen=false; flash("Séance ajoutée"); renderMain();
+}
 function viewHist(){
   var h='<div class="hist"><div class="iobar">'+
         '<button class="iobtn" id="exportBtn">⭳ Exporter</button>'+
         '<button class="iobtn" id="importBtn">⭱ Importer</button></div>';
+  h+=pastForm();
   if(log.length===0){
     h+='<div class="empty-h">Aucune séance enregistrée pour l\'instant.<br>Tes séances validées apparaîtront ici.</div></div>';
     return h;
@@ -1414,19 +1504,26 @@ function viewHist(){
          '<span class="hd mono">'+fmtDate(e.date)+'</span></div><div class="hb mono">'+e.min+' min · '+e.speed+' km/h · pente '+e.incline+'% · '+(e.kcal||0)+' kcal</div></div>';
     } else {
       var s=SESSIONS.filter(function(x){return x.id===e.sessionId;})[0];
-      var summary=Object.keys(e.entries).map(function(id){
-        var nm=(ALL_ITEMS[id]?ALL_ITEMS[id].name:id);
-        var vals=e.entries[id].map(function(x){return (x.reps||"·")+(x.load?"+"+x.load:"");}).join(" · ");
-        return nm+" → "+vals;
-      }).join("\n");
+      var body;
+      if(e.entries && Object.keys(e.entries).length){
+        body=esc(Object.keys(e.entries).map(function(id){
+          var nm=(ALL_ITEMS[id]?ALL_ITEMS[id].name:id);
+          var vals=e.entries[id].map(function(x){return (x.reps||"·")+(x.load?"+"+x.load:"");}).join(" · ");
+          return nm+" → "+vals;
+        }).join("\n"));
+      } else { body="séance enregistrée"+(e.sets?(" · "+e.sets+" séries"):"")+(e.manual?" · saisie manuelle":""); }
       h+='<div class="hentry"><div class="hh"><span class="hs" style="color:'+(s?s.tag:"#fff")+'">'+(s?s.title:"Séance")+'</span>'+
-         '<span class="hd mono">'+fmtDate(e.date)+'</span></div><div class="hb mono">'+esc(summary)+'</div></div>';
+         '<span class="hd mono">'+fmtDate(e.date)+'</span></div><div class="hb mono">'+body+'</div></div>';
     }
   });
   h+='<button class="danger" id="clearBtn">Effacer l\'historique</button></div>';
   return h;
 }
 function wireHist(){
+  var pb=document.getElementById("pastbtn"); if(pb) pb.onclick=function(){ pastOpen=!pastOpen; renderMain(); };
+  Array.prototype.forEach.call(document.querySelectorAll("#main .ptype"), function(b){ b.onclick=function(){ pastType=b.getAttribute("data-ptype"); renderMain(); }; });
+  var pd=document.getElementById("pdate"); if(pd) pd.onchange=function(){ pastDate=pd.value; };
+  var psv=document.getElementById("psave"); if(psv) psv.onclick=logPast;
   var ex=document.getElementById("exportBtn"); if(ex) ex.onclick=doExport;
   var im=document.getElementById("importBtn"); if(im) im.onclick=function(){ document.getElementById("importfile").click(); };
   var cl=document.getElementById("clearBtn");
